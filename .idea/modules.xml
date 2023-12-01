@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PL3Compiladores.iml" filepath="$PROJECT_DIR$/PL3Compiladores.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jasmin-2.4/lib/jas/jas.iml" filepath="$PROJECT_DIR$/jasmin-2.4/lib/jas/jas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jasmin-2.4/jasmin-2.4.iml" filepath="$PROJECT_DIR$/jasmin-2.4/jasmin-2.4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jasmin-2.4/lib/java_cup/java_cup.iml" filepath="$PROJECT_DIR$/jasmin-2.4/lib/java_cup/java_cup.iml" />
+    </modules>
+  </component>
+</project>
