@@ -15,6 +15,8 @@ public class Main {
 
         if (args.length > 0) {
             inputFile = args[0];
+        }else {
+            inputFile = "/Users/samuelpintilei/PL3Compiladores/FicherosEjemplo/code.demo";
         }
         CharStream inputstream = null;
         if (inputFile != null) {
