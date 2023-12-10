@@ -41,6 +41,18 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDeclaracion(LinguineParser.DeclaracionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclaracion(LinguineParser.DeclaracionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAsignacion(LinguineParser.AsignacionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -48,6 +60,30 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAsignacion(LinguineParser.AsignacionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFor(LinguineParser.ForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor(LinguineParser.ForContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWhile(LinguineParser.WhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhile(LinguineParser.WhileContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -23,11 +23,29 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSentencia(LinguineParser.SentenciaContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link LinguineParser#declaracion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclaracion(LinguineParser.DeclaracionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link LinguineParser#asignacion}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAsignacion(LinguineParser.AsignacionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LinguineParser#for}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor(LinguineParser.ForContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LinguineParser#while}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile(LinguineParser.WhileContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link LinguineParser#condicional}.
 	 * @param ctx the parse tree

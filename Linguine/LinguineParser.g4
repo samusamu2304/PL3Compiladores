@@ -9,15 +9,27 @@ options {
 program: (sentencia SEMICOLON NLINE?)*;
 
 sentencia: (asignacion
+        | declaracion
         | condicional
         | show
         | match
+        | for
+        | while
         | llamada_funcion
         | expresion
         | funcion)
         ;
 
-asignacion: LET ID ASSIGN (expresion | condicional | match);
+declaracion: LET ID ASSIGN (expresion | condicional | match);
+
+asignacion: ID ASSIGN (expresion | condicional | match)
+        |ID PLUSPLUS
+        |ID MINUSMINUS
+        ;
+
+for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN sentencia;
+
+while: WHILE LPAREN expresion RPAREN sentencia;
 
 condicional: IF LPAREN expresion RPAREN THEN sentencia (ELSE sentencia)?;
 

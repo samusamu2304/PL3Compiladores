@@ -28,6 +28,16 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 */
 	void exitSentencia(LinguineParser.SentenciaContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link LinguineParser#declaracion}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaracion(LinguineParser.DeclaracionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LinguineParser#declaracion}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaracion(LinguineParser.DeclaracionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link LinguineParser#asignacion}.
 	 * @param ctx the parse tree
 	 */
@@ -37,6 +47,26 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAsignacion(LinguineParser.AsignacionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LinguineParser#for}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor(LinguineParser.ForContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LinguineParser#for}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor(LinguineParser.ForContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LinguineParser#while}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile(LinguineParser.WhileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LinguineParser#while}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile(LinguineParser.WhileContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LinguineParser#condicional}.
 	 * @param ctx the parse tree
