@@ -1,0 +1,7 @@
+let a = 5;
+let b = 3;
+let result = if (a > b) then (a + b) * (a - b) else a / b;
+let texto = "Hello World!";
+fun add(a, b) -> a + b;
+let resultF = add(3, 4);
+show(result);

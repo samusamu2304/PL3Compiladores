@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Linguine");
         InputStream is = System.in;
-        String inputFile = "src/main/Linguine/example.prog";//Solo sirve en el IDE
+        String inputFile = "FicherosEjemplo/example.prog";//Solo sirve en el IDE
         if (args.length >= 1){
             if (args[0].contains("-txt")){
                 Scanner sc = new Scanner(is);
@@ -52,10 +52,12 @@ public class Main {
         LinguineParser parser = new LinguineParser(tokens);
         ParseTree tree = parser.program();
         ParseTreeWalker walker = new ParseTreeWalker();
-        TreeListener listener = new TreeListener();
+        TablaSimbolos tablaSimbolos = new TablaSimbolos();
+        TreeListener listener = new TreeListener(tablaSimbolos);
         System.out.println("\n\n");
         System.out.println("Tabla de variables");
         walker.walk(listener, tree);
+        tablaSimbolos.printTabla();
         GeneradorDeArboles generadorDeArboles = new GeneradorDeArboles(tree,parser);
         SimpleTreeNode rootNode = generadorDeArboles.generarArbol();
 
