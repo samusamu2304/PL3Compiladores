@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="hu.webarticum.tree.printer" type="repository">
+    <properties maven-id="hu.webarticum:tree-printer:3.1.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/hu/webarticum/tree-printer/3.1.0/tree-printer-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
