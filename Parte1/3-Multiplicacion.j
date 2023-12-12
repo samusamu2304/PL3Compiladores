@@ -17,11 +17,11 @@
     iload_1
     iload_2
     imul
-    istore_3  ; Almacenar el resultado en la variable local 3
+    istore_1  ; Almacenar el resultado en la variable local 3
 
     ; Mostrar el resultado por pantalla
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    iload_3
+    iload_1
     invokevirtual java/io/PrintStream/print(I)V
 
     ; Salto de línea

@@ -29,11 +29,40 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclaracion(LinguineParser.DeclaracionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link LinguineParser#asignacion}.
+	 * Visit a parse tree produced by the {@code AsigSimple}
+	 * labeled alternative in {@link LinguineParser#asignacion}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAsignacion(LinguineParser.AsignacionContext ctx);
+	T visitAsigSimple(LinguineParser.AsigSimpleContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AsigCond}
+	 * labeled alternative in {@link LinguineParser#asignacion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAsigCond(LinguineParser.AsigCondContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AsigMatch}
+	 * labeled alternative in {@link LinguineParser#asignacion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAsigMatch(LinguineParser.AsigMatchContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Inc}
+	 * labeled alternative in {@link LinguineParser#asignacion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInc(LinguineParser.IncContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Dec}
+	 * labeled alternative in {@link LinguineParser#asignacion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDec(LinguineParser.DecContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link LinguineParser#for}.
 	 * @param ctx the parse tree
@@ -89,11 +118,82 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitCase(LinguineParser.CaseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link LinguineParser#expresion}.
+	 * Visit a parse tree produced by the {@code Float}
+	 * labeled alternative in {@link LinguineParser#expresion}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpresion(LinguineParser.ExpresionContext ctx);
+	T visitFloat(LinguineParser.FloatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Bool}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBool(LinguineParser.BoolContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code LlamadaFuncion}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLlamadaFuncion(LinguineParser.LlamadaFuncionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MulDiv}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMulDiv(LinguineParser.MulDivContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AddSub}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddSub(LinguineParser.AddSubContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Parentesis}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParentesis(LinguineParser.ParentesisContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Rel}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRel(LinguineParser.RelContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Id}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitId(LinguineParser.IdContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code String}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitString(LinguineParser.StringContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code AndOr}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndOr(LinguineParser.AndOrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Int}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInt(LinguineParser.IntContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link LinguineParser#llamada_funcion}.
 	 * @param ctx the parse tree

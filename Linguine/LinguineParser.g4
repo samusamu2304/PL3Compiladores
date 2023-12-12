@@ -8,7 +8,7 @@ options {
 // Reglas sintácticas
 program: (sentencia SEMICOLON NLINE?)*;
 
-sentencia: (asignacion
+sentencia: asignacion
         | declaracion
         | condicional
         | show
@@ -17,14 +17,16 @@ sentencia: (asignacion
         | while
         | llamada_funcion
         | expresion
-        | funcion)
+        | funcion
         ;
 
 declaracion: LET ID ASSIGN (expresion | condicional | match);
 
-asignacion: ID ASSIGN (expresion | condicional | match)
-        |ID PLUSPLUS
-        |ID MINUSMINUS
+asignacion: ID ASSIGN expresion # AsigSimple
+        |ID ASSIGN condicional # AsigCond
+        |ID ASSIGN match # AsigMatch
+        |ID PLUSPLUS    # Inc
+        |ID MINUSMINUS  # Dec
         ;
 
 for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN sentencia;
@@ -45,14 +47,18 @@ cases: (NLINE case)+;
 
 case: PIPE (expresion | QEST) ARROW expresion;
 
-expresion:  expresion (MUL | DIV) expresion
-        | expresion (PLUS | MINUS) expresion
-        | expresion (GT | GTE | EQ | LT | LTE) expresion
-        | LPAREN expresion RPAREN
-        | ID
-        | INT
-        | STRING
-        | llamada_funcion;
+expresion:  expresion (MUL | DIV) expresion # MulDiv
+        | expresion (PLUS | MINUS) expresion    # AddSub
+        | expresion (GT | GTE | EQ | LT | LTE) expresion    # Rel
+        | expresion (AND | OR) expresion    # AndOr
+        | LPAREN expresion RPAREN   # Parentesis
+        | ID    # Id
+        | INT   # Int
+        | FLOAT # Float
+        | BOOLEAN  # Bool
+        | STRING    # String
+        | llamada_funcion   # LlamadaFuncion
+        ;
 
 llamada_funcion: ID LPAREN args RPAREN;
 
