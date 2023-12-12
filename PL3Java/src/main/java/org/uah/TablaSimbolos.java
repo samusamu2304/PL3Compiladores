@@ -29,4 +29,11 @@ public class TablaSimbolos {
             System.out.println(entry.getKey()+" : "+entry.getValue().getTipo()+" : "+entry.getValue().getValor());
         }
     }
+    public TablaSimbolos clone(){
+        TablaSimbolos tablaSimbolos = new TablaSimbolos();
+        for (Map.Entry<String, Variable> entry : this.tablaSimbolos.entrySet()) {
+            tablaSimbolos.addVariable(entry.getKey(),entry.getValue().getTipo(),entry.getValue().getValor());
+        }
+        return tablaSimbolos;
+    }
 }

@@ -195,12 +195,6 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInt(LinguineParser.IntContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link LinguineParser#llamada_funcion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitLlamada_funcion(LinguineParser.Llamada_funcionContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link LinguineParser#args}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

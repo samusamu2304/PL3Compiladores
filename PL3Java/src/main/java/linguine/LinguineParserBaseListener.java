@@ -353,18 +353,6 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLlamada_funcion(LinguineParser.Llamada_funcionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLlamada_funcion(LinguineParser.Llamada_funcionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterArgs(LinguineParser.ArgsContext ctx) { }
 	/**
 	 * {@inheritDoc}

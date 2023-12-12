@@ -15,7 +15,6 @@ sentencia: asignacion
         | match
         | for
         | while
-        | llamada_funcion
         | expresion
         | funcion
         ;
@@ -57,10 +56,9 @@ expresion:  expresion (MUL | DIV) expresion # MulDiv
         | FLOAT # Float
         | BOOLEAN  # Bool
         | STRING    # String
-        | llamada_funcion   # LlamadaFuncion
+        | ID LPAREN args RPAREN   # LlamadaFuncion
         ;
 
-llamada_funcion: ID LPAREN args RPAREN;
 
 
 args: expresion (COMMA expresion)*;

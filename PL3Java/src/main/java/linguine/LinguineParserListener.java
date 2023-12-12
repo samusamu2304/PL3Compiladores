@@ -320,16 +320,6 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 */
 	void exitInt(LinguineParser.IntContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link LinguineParser#llamada_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void enterLlamada_funcion(LinguineParser.Llamada_funcionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link LinguineParser#llamada_funcion}.
-	 * @param ctx the parse tree
-	 */
-	void exitLlamada_funcion(LinguineParser.Llamada_funcionContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link LinguineParser#args}.
 	 * @param ctx the parse tree
 	 */

@@ -54,15 +54,43 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         TablaSimbolos tablaSimbolos = new TablaSimbolos();
         TreeListener listener = new TreeListener(tablaSimbolos);
-        System.out.println("\n\n");
-        System.out.println("Tabla de variables");
-        walker.walk(listener, tree);
-        tablaSimbolos.printTabla();
+        // System.out.println("\n\n");
+        // System.out.println("Tabla de variables");
+        // walker.walk(listener, tree);
         GeneradorDeArboles generadorDeArboles = new GeneradorDeArboles(tree,parser);
         SimpleTreeNode rootNode = generadorDeArboles.generarArbol();
 
-        System.out.println("\n\n");
-        new ListingTreePrinter().print(rootNode);
+        // System.out.println("\n\n");
+        // new ListingTreePrinter().print(rootNode);
 
+        LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
+        String jasmineCode = visitor.visit(tree);
+        String jasminFile = createJasminFile(jasmineCode);
+        System.out.println(jasminFile);
+        try {
+            FileWriter myWriter = new FileWriter("codigo.j");
+            BufferedWriter bw = new BufferedWriter(myWriter);
+            bw.write(jasminFile);
+            bw.close();
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+        tablaSimbolos.printTabla();
+
+    }
+    private static String createJasminFile(String instructions) {
+        return ".class public Linguine\n"
+                + ".super java/lang/Object\n"
+                + "\n"
+                + ".method public static main([Ljava/lang/String;)V\n"
+                + "   .limit stack 100\n"
+                + "   .limit locals 100\n"
+                + "\n"
+                + instructions + "\n"
+                + "return\n"
+                + "\n"
+                + ".end method";
     }
 }
