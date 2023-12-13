@@ -62,7 +62,6 @@ public class Main {
 
         // System.out.println("\n\n");
         // new ListingTreePrinter().print(rootNode);
-
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
         String jasminFile = createJasminFile(jasmineCode);

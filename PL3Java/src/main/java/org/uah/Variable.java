@@ -2,9 +2,9 @@ package org.uah;
 
 public class Variable {
     private String tipo;
-    private Object valor;
+    private Object[] valor;
 
-    public Variable(String tipo, Object valor){
+    public Variable(String tipo, Object[] valor){
         this.tipo = tipo;
         this.valor = valor;
     }
@@ -13,11 +13,11 @@ public class Variable {
         return this.tipo;
     }
 
-    public Object getValor(){
+    public Object[] getValor(){
         return this.valor;
     }
 
-    public void updateValor(Object valor){
+    public void updateValor(Object[] valor){
         this.valor = valor;
     }
 }

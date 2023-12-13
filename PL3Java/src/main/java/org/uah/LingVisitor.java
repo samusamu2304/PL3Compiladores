@@ -2,6 +2,9 @@ package org.uah;
 
 import linguine.LinguineParser;
 import linguine.LinguineParserBaseVisitor;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 public class LingVisitor extends LinguineParserBaseVisitor<String> {
     TablaSimbolos tablaSimbolos;
@@ -12,56 +15,37 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     }
     @Override
     public String visitAsigSimple(LinguineParser.AsigSimpleContext ctx) {
-        if (tablaSimbolos.existeVariable(ctx.ID().getText())){
-            switch (tablaSimbolos.getVariable(ctx.ID().getText()).getTipo()){
-                case "int":
-                    if (ctx.getChild(2).getText().charAt(0) == '"'){
-                        System.out.println("Error: la variable "+ctx.ID().getText()+" es de tipo int y no puede recibir una cadena.");
-                        break;
-                    } else {
-                        try{
-                            tablaSimbolos.updateVariable(ctx.ID().getText(), Integer.parseInt(ctx.getChild(2).getText()));}
-                        catch (NumberFormatException e){
-                            tablaSimbolos.addVariable(ctx.ID().getText(), "codigo", visit(ctx.getChild(2)));
-                        }
-                    }
-
+        String codJasmin = "";
+        if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
+            Object[] valor = tablaSimbolos.getVariable(ctx.ID().getText()).getValor();
+            String tipo = tablaSimbolos.getVariable(ctx.ID().getText()).getTipo();
+            String resultado = visit(ctx.expresion());
+            codJasmin += resultado;
+            switch (tipo) {
+                case "INT":
+                    codJasmin += "istore_" + valor[1] + "\n";
                     break;
-                case "string":
-                    tablaSimbolos.updateVariable(ctx.ID().getText(), ctx.getChild(2).getText());
+                case "STRING":
+                    codJasmin += "astore_" + valor[1] + "\n";
                     break;
-                case "float":
-                    System.out.println("La variable "+ctx.ID().getText()+" es de tipo float y su valor es "+tablaSimbolos.getVariable(ctx.ID().getText()).getValor());
+                case "FLOAT":
+                    codJasmin += "fstore_" + valor[1] + "\n";
                     break;
-                case "bool":
-                    System.out.println("La variable "+ctx.ID().getText()+" es de tipo bool y su valor es "+tablaSimbolos.getVariable(ctx.ID().getText()).getValor());
+                case "BOOL":
+                    codJasmin += "istore_" + valor[1] + "\n";
                     break;
-                default:
-                    Object valor = null;
-                    String tipo = "desconocido";
-                    try {
-                        //Comprueba si es un numero, si no, se comprueba si es una cadena
-                        valor = Integer.parseInt(ctx.getChild(2).getText());
-                        tipo = "int";
-                        //System.out.println(visit(ctx.getChild(3)));
-                    }catch (NumberFormatException e){
-                        //Comprueba si es una cadena, si no, no se sabe lo que es aun
-                        if (ctx.getChild(2).getText().charAt(0) == '"' && ctx.getChild(3).getText().charAt(ctx.getChild(3).getText().length()-1) == '"'){
-                            valor = ctx.getChild(3).getText();
-                            tipo = "string";
-                        }else {
-                            valor = visit(ctx.getChild(2));
-                            tipo = "codigo";
-                        }
-                    }
-                    tablaSimbolos.addVariable(ctx.ID().getText(),tipo,valor);
+                case "ID":
+                    codJasmin += "istore_" + valor[1] + "\n";
+                    break;
+                case "CODIGO":
+                    //no se hace nada por ahora
                     break;
             }
-
-        }else{
+            tablaSimbolos.updateVariable(ctx.ID().getText(), new Object[]{resultado, valor[1]});//actualiza el valor del codigo
+        } else {
             System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
         }
-        return super.visitAsigSimple(ctx);
+        return codJasmin;
     }
 
     @Override
@@ -76,26 +60,57 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
 
     @Override
     public String visitDeclaracion(LinguineParser.DeclaracionContext ctx) {
-        Object valor = null;
+        /**
+         * Valores de las variables separados en dos partes:
+         * valor[0] = codigo de la variable
+         * valor[1] = indice de variable local
+         * **/
+        Object[] valor = {null,null};
         String tipo = "desconocido";
-        try {
-            //Comprueba si es un numero, si no, se comprueba si es una cadena
-            valor = Integer.parseInt(ctx.getChild(3).getText());
-            tipo = "int";
-            //System.out.println(visit(ctx.getChild(3)));
-        }catch (NumberFormatException e){
-            //Comprueba si es una cadena, si no, no se sabe lo que es aun
-            if (ctx.getChild(3).getText().charAt(0) == '"' && ctx.getChild(3).getText().charAt(ctx.getChild(3).getText().length()-1) == '"'){
-                valor = ctx.getChild(3).getText();
-                tipo = "string";
-            }else {
-                valor = visit(ctx.getChild(3));
-                tipo = "codigo";
-            }
+        String codJasmin = "";
+        String regla = parser.getRuleNames()[(((ParserRuleContext) ctx.getChild(3)).getRuleIndex())];
+        switch (regla) {
+            case "expresion":
+                if (ctx.getChild(3).getChildCount() == 1) {
+                    TerminalNode terminalNode = (TerminalNode) ctx.getChild(3).getChild(0);
+                    int tipoToken = terminalNode.getSymbol().getType();
+                    tipo = parser.VOCABULARY.getSymbolicName(tipoToken);
+                    codJasmin += visit(ctx.getChild(3));
+                    valor[0] = codJasmin;
+                    valor[1] = getContadorEtiqueta();
+                    switch (tipo) {
+                        case "INT":
+                            codJasmin += "istore_" + valor[1] + "\n";
+                            break;
+                        case "STRING":
+                            codJasmin += "astore_" + valor[1] + "\n";
+                            break;
+                        case "FLOAT":
+                            codJasmin += "fstore_" + valor[1] + "\n";
+                            break;
+                        case "BOOL":
+                            codJasmin += "istore_" + valor[1] + "\n";
+                            break;
+                        case "ID":
+                            codJasmin += "istore_" + valor[1] + "\n";
+                            break;
+                    }
+                } else {
+                    valor[0] = visit(ctx.getChild(3));
+                    tipo = "CODIGO";
+                }
+                break;
+            case "condicional":
+                valor[0] = visit(ctx.getChild(3));
+                tipo = "CODIGO";
+                break;
+            case "match":
+                valor[0] = visit(ctx.getChild(3));
+                tipo = "CODIGO";
+                break;
         }
-        //añade la variable a la tabla de simbolos, si ya existe, la actualiza
         tablaSimbolos.addVariable(ctx.ID().getText(), tipo, valor);
-        return "";
+        return codJasmin;
     }
 
     @Override
@@ -120,8 +135,6 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
 
     @Override
     public String visitCondicional(LinguineParser.CondicionalContext ctx) {
-        int etiquetaResultado = getContadorEtiqueta();
-        String resultado = "istore_"+etiquetaResultado+"\n";
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(2));
         codJasmin += "ldc 1\n";
@@ -132,18 +145,12 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
         if (ctx.getChildCount() > 7) {
             codRamaElse = visit(ctx.getChild(7));  // Genera código para la rama ELSE
         }
-        codJasmin += "if_icmpne " + etiqueta1 + "\n";
+        codJasmin += "ifeq " + etiqueta1 + "\n";
         codJasmin += codRamaThen;
-        codJasmin += resultado;
         codJasmin += "goto " + etiqueta2 + "\n";
         codJasmin += etiqueta1 + ":\n";
         codJasmin += codRamaElse;
-        codJasmin += resultado;
         codJasmin += etiqueta2 + ":\n";
-        // Unica manera decente que he encontrado para que al asignar una variable en un condicional, se guarde en la tabla de simbolos como debe
-        for (int i = 0; i < ctx.sentencia().size(); i++){
-                tablaSimbolos.addVariable(ctx.sentencia(i).getChild(0).getChild(0).getText(), "codigo","iload_"+etiquetaResultado+"\n");
-        }
         return codJasmin;
     }
 
@@ -170,9 +177,47 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     @Override
     public String visitShow(LinguineParser.ShowContext ctx) {
         String codJasmin = "";
-        codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
-        codJasmin += visit(ctx.getChild(1));
-        codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
+        String tipo = "desconocido";
+        if (ctx.expresion().getChildCount() == 1) {
+            TerminalNode terminalNode = (TerminalNode) ctx.expresion().getChild(0);
+            int tipoToken = terminalNode.getSymbol().getType();
+            tipo = parser.VOCABULARY.getSymbolicName(tipoToken);
+            if (tipo.equals("ID")) {
+                if (tablaSimbolos.existeVariable(ctx.expresion().getText())) {
+                    tipo = tablaSimbolos.getVariable(ctx.expresion().getText()).getTipo();
+                } else {
+                    System.out.println("Error: la variable " + ctx.expresion().getText() + " no fue declarada.");
+                }
+            }
+            switch (tipo) {
+                case "INT":
+                    codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+                    codJasmin += visit(ctx.expresion());
+                    codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
+                    break;
+                case "STRING":
+                    codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+                    codJasmin += visit(ctx.expresion());
+                    codJasmin += "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n";
+                    break;
+                case "FLOAT":
+                    codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+                    codJasmin += visit(ctx.expresion());
+                    codJasmin += "invokevirtual java/io/PrintStream/println(F)V\n";
+                    break;
+                case "BOOL":
+                    codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+                    codJasmin += visit(ctx.expresion());
+                    codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
+                    break;
+            }
+        } else {
+            /** Se asume que si hay varias cosas, es un int (gestionar mas tarde si da tiempo) **/
+            codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+            codJasmin += visit(ctx.expresion());
+            codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
+        }
+
         return codJasmin;
     }
 
@@ -289,14 +334,30 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     @Override
     public String visitId(LinguineParser.IdContext ctx) {
         String codJasmin = "";
-        if (!(ctx.getParent() instanceof LinguineParser.DeclaracionContext)) {
+        if (!(ctx.getParent() instanceof LinguineParser.DeclaracionContext) && !(ctx.getParent() instanceof LinguineParser.AsignacionContext)) {
             if (tablaSimbolos.existeVariable(ctx.getText())) {
-                if (tablaSimbolos.getVariable(ctx.getText()).getTipo().equals("int")) {
-                    codJasmin += "ldc " + tablaSimbolos.getVariable(ctx.getText()).getValor() + "\n";
-                } else if (tablaSimbolos.getVariable(ctx.getText()).getTipo().equals("string")) {
-                    codJasmin += "ldc " + tablaSimbolos.getVariable(ctx.getText()).getValor() + "\n";
-                } else if (tablaSimbolos.getVariable(ctx.getText()).getTipo().equals("codigo")) {
-                    codJasmin += tablaSimbolos.getVariable(ctx.getText()).getValor();
+                Object[] valor = tablaSimbolos.getVariable(ctx.getText()).getValor();
+
+                switch (tablaSimbolos.getVariable(ctx.getText()).getTipo()){
+                    case "INT":
+                        codJasmin += "iload_"+valor[1]+"\n";
+                        break;
+                    case "STRING":
+                        codJasmin += "aload_"+valor[1]+"\n";
+                        break;
+                    case "FLOAT":
+                        codJasmin += "fload_"+ valor[1]+"\n";
+                        break;
+                    case "BOOL":
+                        codJasmin += "iload_"+ valor[1]+"\n";
+                        break;
+                    case "ID":
+                        codJasmin += "iload_"+ valor[1]+"\n";
+                        break;
+                    case "CODIGO":
+                        codJasmin += valor[0];
+                        break;
+
                 }
             } else {
                 System.out.println("Error: la variable " + ctx.getText() + " no fue declarada.");
@@ -352,7 +413,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
         return roman;
     }
 
-    private int contadorEtiqueta = 0;
+    private int contadorEtiqueta = 1;//0 reservado
     private int getContadorEtiqueta(){
         //Genera etiquetas unicas para cada condicional
         return contadorEtiqueta++;

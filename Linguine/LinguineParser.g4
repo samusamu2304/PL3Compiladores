@@ -38,7 +38,7 @@ funcion: FUN ID LPAREN params RPAREN ARROW (sentencia);
 
 params: ID (COMMA ID)*;
 
-show: SHOW expresion;
+show: SHOW LPAREN expresion RPAREN;
 
 match: MATCH expresion WITH cases;
 

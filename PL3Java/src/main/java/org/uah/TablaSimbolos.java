@@ -9,11 +9,11 @@ public class TablaSimbolos {
         tablaSimbolos = new HashMap<>();
     }
 
-    public void addVariable(String nombre,String tipo, Object valor){
+    public void addVariable(String nombre,String tipo, Object[] valor){
         tablaSimbolos.put(nombre, new Variable(tipo,valor));
     }
 
-    public void updateVariable(String nombre, Object valor){
+    public void updateVariable(String nombre, Object[] valor){
         tablaSimbolos.get(nombre).updateValor(valor);
     }
 

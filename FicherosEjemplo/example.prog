@@ -1,10 +1,10 @@
-let a = (1 + (8 - 2) / 3) * 2;
-a + 2;
-show(a-2);
 let x = 3;
+let y = "test";
+show(y);
+show(x+2);
 x = x * 2;
-x = 3;
-show(x < 4-2);
-let y = 0;
-if (x > 2) then y = 2 else y = 3;
+show(x);
+let y = 2;
+show(x+y);
+if (x > 2) then let y = 1 else let y = 0;
 show(y);
