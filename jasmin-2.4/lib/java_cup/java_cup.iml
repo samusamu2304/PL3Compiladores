@@ -10,5 +10,6 @@
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="jasmin" level="project" />
     <orderEntry type="module" module-name="jasmin-2.4" />
+    <orderEntry type="library" name="antlr.antlr4" level="project" />
   </component>
 </module>
