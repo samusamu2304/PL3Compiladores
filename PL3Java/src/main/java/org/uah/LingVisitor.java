@@ -23,19 +23,19 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
             codJasmin += resultado;
             switch (tipo) {
                 case "INT":
-                    codJasmin += "istore_" + valor[1] + "\n";
+                    codJasmin += "istore " + valor[1] + "\n";
                     break;
                 case "STRING":
-                    codJasmin += "astore_" + valor[1] + "\n";
+                    codJasmin += "astore " + valor[1] + "\n";
                     break;
                 case "FLOAT":
-                    codJasmin += "fstore_" + valor[1] + "\n";
+                    codJasmin += "fstore " + valor[1] + "\n";
                     break;
                 case "BOOL":
-                    codJasmin += "istore_" + valor[1] + "\n";
+                    codJasmin += "istore " + valor[1] + "\n";
                     break;
                 case "ID":
-                    codJasmin += "istore_" + valor[1] + "\n";
+                    codJasmin += "istore " + valor[1] + "\n";
                     break;
                 case "CODIGO":
                     //no se hace nada por ahora
@@ -80,19 +80,19 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     valor[1] = getContadorEtiqueta();
                     switch (tipo) {
                         case "INT":
-                            codJasmin += "istore_" + valor[1] + "\n";
+                            codJasmin += "istore " + valor[1] + "\n";
                             break;
                         case "STRING":
-                            codJasmin += "astore_" + valor[1] + "\n";
+                            codJasmin += "astore " + valor[1] + "\n";
                             break;
                         case "FLOAT":
-                            codJasmin += "fstore_" + valor[1] + "\n";
+                            codJasmin += "fstore " + valor[1] + "\n";
                             break;
                         case "BOOL":
-                            codJasmin += "istore_" + valor[1] + "\n";
+                            codJasmin += "istore " + valor[1] + "\n";
                             break;
                         case "ID":
-                            codJasmin += "istore_" + valor[1] + "\n";
+                            codJasmin += "istore " + valor[1] + "\n";
                             break;
                     }
                 } else {
@@ -137,7 +137,6 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     public String visitCondicional(LinguineParser.CondicionalContext ctx) {
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(2));
-        codJasmin += "ldc 1\n";
         String etiqueta1 = "L" + getContadorEtiqueta();
         String codRamaThen = visit(ctx.getChild(5));  // Genera código para la rama THEN
         String etiqueta2 = "L" + getContadorEtiqueta();
@@ -340,19 +339,19 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
 
                 switch (tablaSimbolos.getVariable(ctx.getText()).getTipo()){
                     case "INT":
-                        codJasmin += "iload_"+valor[1]+"\n";
+                        codJasmin += "iload "+valor[1]+"\n";
                         break;
                     case "STRING":
-                        codJasmin += "aload_"+valor[1]+"\n";
+                        codJasmin += "aload "+valor[1]+"\n";
                         break;
                     case "FLOAT":
-                        codJasmin += "fload_"+ valor[1]+"\n";
+                        codJasmin += "fload "+ valor[1]+"\n";
                         break;
                     case "BOOL":
-                        codJasmin += "iload_"+ valor[1]+"\n";
+                        codJasmin += "iload "+ valor[1]+"\n";
                         break;
                     case "ID":
-                        codJasmin += "iload_"+ valor[1]+"\n";
+                        codJasmin += "iload "+ valor[1]+"\n";
                         break;
                     case "CODIGO":
                         codJasmin += valor[0];
