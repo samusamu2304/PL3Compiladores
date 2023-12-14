@@ -6,7 +6,7 @@
     .limit locals 2
 
     ; Primer número (puedes cambiar el valor aquí)
-    ldc 5
+    ldc 7
     istore_0
 
     ; Segundo número (puedes cambiar el valor aquí)
