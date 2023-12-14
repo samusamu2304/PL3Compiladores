@@ -179,7 +179,19 @@ if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
 
     @Override
     public String visitFor(LinguineParser.ForContext ctx) {
-        return super.visitFor(ctx);
+        String repLabel = "L" + getContadorEtiqueta();
+        String endLabel = "L" + getContadorEtiqueta();
+        String codJasmin = "";
+        codJasmin += visit(ctx.declaracion());
+        codJasmin += repLabel + ":\n";
+        codJasmin += visit(ctx.expresion());
+        codJasmin += "ldc 1\n";
+        codJasmin += "if_icmpne " + endLabel + "\n";
+        codJasmin += visit(ctx.sentencia());
+        codJasmin += visit(ctx.asignacion());
+        codJasmin += "goto " + repLabel + "\n";
+        codJasmin += endLabel + ":\n";
+        return codJasmin;
     }
 
     @Override

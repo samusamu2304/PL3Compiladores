@@ -1,5 +1,6 @@
 package org.uah;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ public class TablaSimbolos {
     }
     public void printTabla(){
         for (Map.Entry<String, Variable> entry : tablaSimbolos.entrySet()) {
-            System.out.println(entry.getKey()+" : "+entry.getValue().getTipo()+" : "+entry.getValue().getValor());
+            System.out.println(entry.getKey() + " : " + entry.getValue().getTipo() + " : " + entry.getValue().getValor()[1]);
         }
     }
     public TablaSimbolos clone(){

@@ -2,32 +2,53 @@
 .super java/lang/Object
 
 .method public static main([Ljava/lang/String;)V
-   .limit stack 2
-   .limit locals 1
+   .limit stack 100
+   .limit locals 100
 
-   ; Inicializar la variable de control en 1
-   iconst_1
-   istore_0
+ldc 0
+istore 3
+L1:
+iload 3
+ldc 10
+if_icmplt L4
+ldc 0
+goto L5
+L4:
+ldc 1
+L5:
+ldc 1
+if_icmpne L2
+ldc 0
+istore 8
+L6:
+iload 8
+ldc 10
+if_icmplt L9
+ldc 0
+goto L10
+L9:
+ldc 1
+L10:
+ldc 1
+if_icmpne L7
+getstatic java/lang/System/out Ljava/io/PrintStream;
+iload 3
+iload 8
+iadd
+invokevirtual java/io/PrintStream/println(I)V
+iload 8
+ldc 1
+iadd
+istore 8
+goto L6
+L7:
+iload 3
+ldc 1
+iadd
+istore 3
+goto L1
+L2:
 
-   ; Etiqueta de inicio del bucle
-   while:
-      ; Cargar el valor de la variable de control
-      iload_0
-      ; Comparar si es mayor que 5
-      bipush 5
-      if_icmple endWhile
+return
 
-      ; Imprimir el valor de la variable de control
-      getstatic java/lang/System/out Ljava/io/PrintStream;
-      iload_0
-      invokevirtual java/io/PrintStream/println(I)V
-
-      ; Incrementar la variable de control
-      iinc 0 1
-      ; Volver al inicio del bucle
-      goto while
-
-   ; Etiqueta de fin del bucle
-   endWhile:
-      return
 .end method
