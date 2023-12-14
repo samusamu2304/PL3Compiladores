@@ -51,10 +51,10 @@ expresion:  expresion (MUL | DIV) expresion # MulDiv
         | expresion (GT | GTE | EQ | LT | LTE) expresion    # Rel
         | expresion (AND | OR) expresion    # AndOr
         | LPAREN expresion RPAREN   # Parentesis
+        | BOOLEAN  # Boolean
         | ID    # Id
         | INT   # Int
         | FLOAT # Float
-        | BOOLEAN  # Bool
         | STRING    # String
         | ID LPAREN args RPAREN   # LlamadaFuncion
         ;

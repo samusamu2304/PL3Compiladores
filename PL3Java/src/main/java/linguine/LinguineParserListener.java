@@ -200,18 +200,6 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 */
 	void exitFloat(LinguineParser.FloatContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Bool}
-	 * labeled alternative in {@link LinguineParser#expresion}.
-	 * @param ctx the parse tree
-	 */
-	void enterBool(LinguineParser.BoolContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Bool}
-	 * labeled alternative in {@link LinguineParser#expresion}.
-	 * @param ctx the parse tree
-	 */
-	void exitBool(LinguineParser.BoolContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code LlamadaFuncion}
 	 * labeled alternative in {@link LinguineParser#expresion}.
 	 * @param ctx the parse tree
@@ -295,6 +283,18 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitString(LinguineParser.StringContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Boolean}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 */
+	void enterBoolean(LinguineParser.BooleanContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Boolean}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 */
+	void exitBoolean(LinguineParser.BooleanContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code AndOr}
 	 * labeled alternative in {@link LinguineParser#expresion}.

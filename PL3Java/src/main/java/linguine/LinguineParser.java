@@ -18,7 +18,7 @@ public class LinguineParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		LET=1, IF=2, THEN=3, ELSE=4, FOR=5, WHILE=6, FUN=7, SHOW=8, MATCH=9, WITH=10, 
-		PIPE=11, ID=12, FLOAT=13, BOOLEAN=14, INT=15, STRING=16, PLUS=17, MINUS=18, 
+		BOOLEAN=11, PIPE=12, ID=13, FLOAT=14, INT=15, STRING=16, PLUS=17, MINUS=18, 
 		MUL=19, DIV=20, EQ=21, PLUSPLUS=22, MINUSMINUS=23, GT=24, LT=25, GTE=26, 
 		LTE=27, AND=28, OR=29, ASSIGN=30, LPAREN=31, RPAREN=32, COMMA=33, ARROW=34, 
 		SEMICOLON=35, NLINE=36, QEST=37, ESPACIO_BLANCO=38;
@@ -39,7 +39,7 @@ public class LinguineParser extends Parser {
 	private static String[] makeLiteralNames() {
 		return new String[] {
 			null, "'let'", "'if'", "'then'", "'else'", "'for'", "'while'", "'fun'", 
-			"'show'", "'match'", "'with'", "'|'", null, null, null, null, null, "'+'", 
+			"'show'", "'match'", "'with'", null, "'|'", null, null, null, null, "'+'", 
 			"'-'", "'*'", "'/'", "'=='", "'++'", "'--'", "'>'", "'<'", "'>='", "'<='", 
 			"'&&'", "'||'", "'='", "'('", "')'", "','", "'->'", "';'", null, "'?'"
 		};
@@ -48,7 +48,7 @@ public class LinguineParser extends Parser {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "LET", "IF", "THEN", "ELSE", "FOR", "WHILE", "FUN", "SHOW", "MATCH", 
-			"WITH", "PIPE", "ID", "FLOAT", "BOOLEAN", "INT", "STRING", "PLUS", "MINUS", 
+			"WITH", "BOOLEAN", "PIPE", "ID", "FLOAT", "INT", "STRING", "PLUS", "MINUS", 
 			"MUL", "DIV", "EQ", "PLUSPLUS", "MINUSMINUS", "GT", "LT", "GTE", "LTE", 
 			"AND", "OR", "ASSIGN", "LPAREN", "RPAREN", "COMMA", "ARROW", "SEMICOLON", 
 			"NLINE", "QEST", "ESPACIO_BLANCO"
@@ -150,7 +150,7 @@ public class LinguineParser extends Parser {
 			setState(37);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 2147611622L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 2147609574L) != 0)) {
 				{
 				{
 				setState(30);
@@ -365,9 +365,9 @@ public class LinguineParser extends Parser {
 			setState(57);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
+			case BOOLEAN:
 			case ID:
 			case FLOAT:
-			case BOOLEAN:
 			case INT:
 			case STRING:
 			case LPAREN:
@@ -1163,9 +1163,9 @@ public class LinguineParser extends Parser {
 			setState(135);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
+			case BOOLEAN:
 			case ID:
 			case FLOAT:
-			case BOOLEAN:
 			case INT:
 			case STRING:
 			case LPAREN:
@@ -1227,24 +1227,6 @@ public class LinguineParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof LinguineParserVisitor ) return ((LinguineParserVisitor<? extends T>)visitor).visitFloat(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class BoolContext extends ExpresionContext {
-		public TerminalNode BOOLEAN() { return getToken(LinguineParser.BOOLEAN, 0); }
-		public BoolContext(ExpresionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof LinguineParserListener ) ((LinguineParserListener)listener).enterBool(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof LinguineParserListener ) ((LinguineParserListener)listener).exitBool(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof LinguineParserVisitor ) return ((LinguineParserVisitor<? extends T>)visitor).visitBool(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1408,6 +1390,24 @@ public class LinguineParser extends Parser {
 		}
 	}
 	@SuppressWarnings("CheckReturnValue")
+	public static class BooleanContext extends ExpresionContext {
+		public TerminalNode BOOLEAN() { return getToken(LinguineParser.BOOLEAN, 0); }
+		public BooleanContext(ExpresionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof LinguineParserListener ) ((LinguineParserListener)listener).enterBoolean(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof LinguineParserListener ) ((LinguineParserListener)listener).exitBoolean(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof LinguineParserVisitor ) return ((LinguineParserVisitor<? extends T>)visitor).visitBoolean(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class AndOrContext extends ExpresionContext {
 		public List<ExpresionContext> expresion() {
 			return getRuleContexts(ExpresionContext.class);
@@ -1486,38 +1486,38 @@ public class LinguineParser extends Parser {
 				break;
 			case 2:
 				{
-				_localctx = new IdContext(_localctx);
+				_localctx = new BooleanContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(145);
-				match(ID);
+				match(BOOLEAN);
 				}
 				break;
 			case 3:
 				{
-				_localctx = new IntContext(_localctx);
+				_localctx = new IdContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(146);
-				match(INT);
+				match(ID);
 				}
 				break;
 			case 4:
 				{
-				_localctx = new FloatContext(_localctx);
+				_localctx = new IntContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(147);
-				match(FLOAT);
+				match(INT);
 				}
 				break;
 			case 5:
 				{
-				_localctx = new BoolContext(_localctx);
+				_localctx = new FloatContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(148);
-				match(BOOLEAN);
+				match(FLOAT);
 				}
 				break;
 			case 6:
@@ -1795,14 +1795,14 @@ public class LinguineParser extends Parser {
 		"\u00001)\u0001\u0000\u0000\u00001*\u0001\u0000\u0000\u00001+\u0001\u0000"+
 		"\u0000\u00001,\u0001\u0000\u0000\u00001-\u0001\u0000\u0000\u00001.\u0001"+
 		"\u0000\u0000\u00001/\u0001\u0000\u0000\u000010\u0001\u0000\u0000\u0000"+
-		"2\u0003\u0001\u0000\u0000\u000034\u0005\u0001\u0000\u000045\u0005\f\u0000"+
+		"2\u0003\u0001\u0000\u0000\u000034\u0005\u0001\u0000\u000045\u0005\r\u0000"+
 		"\u000059\u0005\u001e\u0000\u00006:\u0003\u001a\r\u00007:\u0003\f\u0006"+
 		"\u00008:\u0003\u0014\n\u000096\u0001\u0000\u0000\u000097\u0001\u0000\u0000"+
 		"\u000098\u0001\u0000\u0000\u0000:\u0005\u0001\u0000\u0000\u0000;<\u0005"+
-		"\f\u0000\u0000<=\u0005\u001e\u0000\u0000=I\u0003\u001a\r\u0000>?\u0005"+
-		"\f\u0000\u0000?@\u0005\u001e\u0000\u0000@I\u0003\f\u0006\u0000AB\u0005"+
-		"\f\u0000\u0000BC\u0005\u001e\u0000\u0000CI\u0003\u0014\n\u0000DE\u0005"+
-		"\f\u0000\u0000EI\u0005\u0016\u0000\u0000FG\u0005\f\u0000\u0000GI\u0005"+
+		"\r\u0000\u0000<=\u0005\u001e\u0000\u0000=I\u0003\u001a\r\u0000>?\u0005"+
+		"\r\u0000\u0000?@\u0005\u001e\u0000\u0000@I\u0003\f\u0006\u0000AB\u0005"+
+		"\r\u0000\u0000BC\u0005\u001e\u0000\u0000CI\u0003\u0014\n\u0000DE\u0005"+
+		"\r\u0000\u0000EI\u0005\u0016\u0000\u0000FG\u0005\r\u0000\u0000GI\u0005"+
 		"\u0017\u0000\u0000H;\u0001\u0000\u0000\u0000H>\u0001\u0000\u0000\u0000"+
 		"HA\u0001\u0000\u0000\u0000HD\u0001\u0000\u0000\u0000HF\u0001\u0000\u0000"+
 		"\u0000I\u0007\u0001\u0000\u0000\u0000JK\u0005\u0005\u0000\u0000KL\u0005"+
@@ -1815,10 +1815,10 @@ public class LinguineParser extends Parser {
 		"\u0000]^\u0005 \u0000\u0000^_\u0005\u0003\u0000\u0000_b\u0003\u0002\u0001"+
 		"\u0000`a\u0005\u0004\u0000\u0000ac\u0003\u0002\u0001\u0000b`\u0001\u0000"+
 		"\u0000\u0000bc\u0001\u0000\u0000\u0000c\r\u0001\u0000\u0000\u0000de\u0005"+
-		"\u0007\u0000\u0000ef\u0005\f\u0000\u0000fg\u0005\u001f\u0000\u0000gh\u0003"+
+		"\u0007\u0000\u0000ef\u0005\r\u0000\u0000fg\u0005\u001f\u0000\u0000gh\u0003"+
 		"\u0010\b\u0000hi\u0005 \u0000\u0000ij\u0005\"\u0000\u0000jk\u0003\u0002"+
-		"\u0001\u0000k\u000f\u0001\u0000\u0000\u0000lq\u0005\f\u0000\u0000mn\u0005"+
-		"!\u0000\u0000np\u0005\f\u0000\u0000om\u0001\u0000\u0000\u0000ps\u0001"+
+		"\u0001\u0000k\u000f\u0001\u0000\u0000\u0000lq\u0005\r\u0000\u0000mn\u0005"+
+		"!\u0000\u0000np\u0005\r\u0000\u0000om\u0001\u0000\u0000\u0000ps\u0001"+
 		"\u0000\u0000\u0000qo\u0001\u0000\u0000\u0000qr\u0001\u0000\u0000\u0000"+
 		"r\u0011\u0001\u0000\u0000\u0000sq\u0001\u0000\u0000\u0000tu\u0005\b\u0000"+
 		"\u0000uv\u0005\u001f\u0000\u0000vw\u0003\u001a\r\u0000wx\u0005 \u0000"+
@@ -1827,37 +1827,37 @@ public class LinguineParser extends Parser {
 		"\u0000\u0000\u0000~\u007f\u0005$\u0000\u0000\u007f\u0081\u0003\u0018\f"+
 		"\u0000\u0080~\u0001\u0000\u0000\u0000\u0081\u0082\u0001\u0000\u0000\u0000"+
 		"\u0082\u0080\u0001\u0000\u0000\u0000\u0082\u0083\u0001\u0000\u0000\u0000"+
-		"\u0083\u0017\u0001\u0000\u0000\u0000\u0084\u0087\u0005\u000b\u0000\u0000"+
-		"\u0085\u0088\u0003\u001a\r\u0000\u0086\u0088\u0005%\u0000\u0000\u0087"+
-		"\u0085\u0001\u0000\u0000\u0000\u0087\u0086\u0001\u0000\u0000\u0000\u0088"+
-		"\u0089\u0001\u0000\u0000\u0000\u0089\u008a\u0005\"\u0000\u0000\u008a\u008b"+
-		"\u0003\u001a\r\u0000\u008b\u0019\u0001\u0000\u0000\u0000\u008c\u008d\u0006"+
-		"\r\uffff\uffff\u0000\u008d\u008e\u0005\u001f\u0000\u0000\u008e\u008f\u0003"+
+		"\u0083\u0017\u0001\u0000\u0000\u0000\u0084\u0087\u0005\f\u0000\u0000\u0085"+
+		"\u0088\u0003\u001a\r\u0000\u0086\u0088\u0005%\u0000\u0000\u0087\u0085"+
+		"\u0001\u0000\u0000\u0000\u0087\u0086\u0001\u0000\u0000\u0000\u0088\u0089"+
+		"\u0001\u0000\u0000\u0000\u0089\u008a\u0005\"\u0000\u0000\u008a\u008b\u0003"+
+		"\u001a\r\u0000\u008b\u0019\u0001\u0000\u0000\u0000\u008c\u008d\u0006\r"+
+		"\uffff\uffff\u0000\u008d\u008e\u0005\u001f\u0000\u0000\u008e\u008f\u0003"+
 		"\u001a\r\u0000\u008f\u0090\u0005 \u0000\u0000\u0090\u009c\u0001\u0000"+
-		"\u0000\u0000\u0091\u009c\u0005\f\u0000\u0000\u0092\u009c\u0005\u000f\u0000"+
-		"\u0000\u0093\u009c\u0005\r\u0000\u0000\u0094\u009c\u0005\u000e\u0000\u0000"+
-		"\u0095\u009c\u0005\u0010\u0000\u0000\u0096\u0097\u0005\f\u0000\u0000\u0097"+
-		"\u0098\u0005\u001f\u0000\u0000\u0098\u0099\u0003\u001c\u000e\u0000\u0099"+
-		"\u009a\u0005 \u0000\u0000\u009a\u009c\u0001\u0000\u0000\u0000\u009b\u008c"+
-		"\u0001\u0000\u0000\u0000\u009b\u0091\u0001\u0000\u0000\u0000\u009b\u0092"+
-		"\u0001\u0000\u0000\u0000\u009b\u0093\u0001\u0000\u0000\u0000\u009b\u0094"+
-		"\u0001\u0000\u0000\u0000\u009b\u0095\u0001\u0000\u0000\u0000\u009b\u0096"+
-		"\u0001\u0000\u0000\u0000\u009c\u00ab\u0001\u0000\u0000\u0000\u009d\u009e"+
-		"\n\u000b\u0000\u0000\u009e\u009f\u0007\u0000\u0000\u0000\u009f\u00aa\u0003"+
-		"\u001a\r\f\u00a0\u00a1\n\n\u0000\u0000\u00a1\u00a2\u0007\u0001\u0000\u0000"+
-		"\u00a2\u00aa\u0003\u001a\r\u000b\u00a3\u00a4\n\t\u0000\u0000\u00a4\u00a5"+
-		"\u0007\u0002\u0000\u0000\u00a5\u00aa\u0003\u001a\r\n\u00a6\u00a7\n\b\u0000"+
-		"\u0000\u00a7\u00a8\u0007\u0003\u0000\u0000\u00a8\u00aa\u0003\u001a\r\t"+
-		"\u00a9\u009d\u0001\u0000\u0000\u0000\u00a9\u00a0\u0001\u0000\u0000\u0000"+
-		"\u00a9\u00a3\u0001\u0000\u0000\u0000\u00a9\u00a6\u0001\u0000\u0000\u0000"+
-		"\u00aa\u00ad\u0001\u0000\u0000\u0000\u00ab\u00a9\u0001\u0000\u0000\u0000"+
-		"\u00ab\u00ac\u0001\u0000\u0000\u0000\u00ac\u001b\u0001\u0000\u0000\u0000"+
-		"\u00ad\u00ab\u0001\u0000\u0000\u0000\u00ae\u00b3\u0003\u001a\r\u0000\u00af"+
-		"\u00b0\u0005!\u0000\u0000\u00b0\u00b2\u0003\u001a\r\u0000\u00b1\u00af"+
-		"\u0001\u0000\u0000\u0000\u00b2\u00b5\u0001\u0000\u0000\u0000\u00b3\u00b1"+
-		"\u0001\u0000\u0000\u0000\u00b3\u00b4\u0001\u0000\u0000\u0000\u00b4\u001d"+
-		"\u0001\u0000\u0000\u0000\u00b5\u00b3\u0001\u0000\u0000\u0000\r!%19Hbq"+
-		"\u0082\u0087\u009b\u00a9\u00ab\u00b3";
+		"\u0000\u0000\u0091\u009c\u0005\u000b\u0000\u0000\u0092\u009c\u0005\r\u0000"+
+		"\u0000\u0093\u009c\u0005\u000f\u0000\u0000\u0094\u009c\u0005\u000e\u0000"+
+		"\u0000\u0095\u009c\u0005\u0010\u0000\u0000\u0096\u0097\u0005\r\u0000\u0000"+
+		"\u0097\u0098\u0005\u001f\u0000\u0000\u0098\u0099\u0003\u001c\u000e\u0000"+
+		"\u0099\u009a\u0005 \u0000\u0000\u009a\u009c\u0001\u0000\u0000\u0000\u009b"+
+		"\u008c\u0001\u0000\u0000\u0000\u009b\u0091\u0001\u0000\u0000\u0000\u009b"+
+		"\u0092\u0001\u0000\u0000\u0000\u009b\u0093\u0001\u0000\u0000\u0000\u009b"+
+		"\u0094\u0001\u0000\u0000\u0000\u009b\u0095\u0001\u0000\u0000\u0000\u009b"+
+		"\u0096\u0001\u0000\u0000\u0000\u009c\u00ab\u0001\u0000\u0000\u0000\u009d"+
+		"\u009e\n\u000b\u0000\u0000\u009e\u009f\u0007\u0000\u0000\u0000\u009f\u00aa"+
+		"\u0003\u001a\r\f\u00a0\u00a1\n\n\u0000\u0000\u00a1\u00a2\u0007\u0001\u0000"+
+		"\u0000\u00a2\u00aa\u0003\u001a\r\u000b\u00a3\u00a4\n\t\u0000\u0000\u00a4"+
+		"\u00a5\u0007\u0002\u0000\u0000\u00a5\u00aa\u0003\u001a\r\n\u00a6\u00a7"+
+		"\n\b\u0000\u0000\u00a7\u00a8\u0007\u0003\u0000\u0000\u00a8\u00aa\u0003"+
+		"\u001a\r\t\u00a9\u009d\u0001\u0000\u0000\u0000\u00a9\u00a0\u0001\u0000"+
+		"\u0000\u0000\u00a9\u00a3\u0001\u0000\u0000\u0000\u00a9\u00a6\u0001\u0000"+
+		"\u0000\u0000\u00aa\u00ad\u0001\u0000\u0000\u0000\u00ab\u00a9\u0001\u0000"+
+		"\u0000\u0000\u00ab\u00ac\u0001\u0000\u0000\u0000\u00ac\u001b\u0001\u0000"+
+		"\u0000\u0000\u00ad\u00ab\u0001\u0000\u0000\u0000\u00ae\u00b3\u0003\u001a"+
+		"\r\u0000\u00af\u00b0\u0005!\u0000\u0000\u00b0\u00b2\u0003\u001a\r\u0000"+
+		"\u00b1\u00af\u0001\u0000\u0000\u0000\u00b2\u00b5\u0001\u0000\u0000\u0000"+
+		"\u00b3\u00b1\u0001\u0000\u0000\u0000\u00b3\u00b4\u0001\u0000\u0000\u0000"+
+		"\u00b4\u001d\u0001\u0000\u0000\u0000\u00b5\u00b3\u0001\u0000\u0000\u0000"+
+		"\r!%19Hbq\u0082\u0087\u009b\u00a9\u00ab\u00b3";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -31,7 +31,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                 case "FLOAT":
                     codJasmin += "fstore " + valor[1] + "\n";
                     break;
-                case "BOOL":
+                case "BOOLEAN":
                     codJasmin += "istore " + valor[1] + "\n";
                     break;
                 case "ID":
@@ -88,7 +88,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                         case "FLOAT":
                             codJasmin += "fstore " + valor[1] + "\n";
                             break;
-                        case "BOOL":
+                        case "BOOLEAN":
                             codJasmin += "istore " + valor[1] + "\n";
                             break;
                         case "ID":
@@ -115,12 +115,66 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
 
     @Override
     public String visitInc(LinguineParser.IncContext ctx) {
-        return super.visitInc(ctx);
+        String codJasmin = "";
+if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
+            Object[] valor = tablaSimbolos.getVariable(ctx.ID().getText()).getValor();
+            String tipo = tablaSimbolos.getVariable(ctx.ID().getText()).getTipo();
+            switch (tipo) {
+                case "INT":
+                    codJasmin += "iload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "iadd\n";
+                    codJasmin += "istore " + valor[1] + "\n";
+                    break;
+                case "FLOAT":
+                    codJasmin += "fload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "fadd\n";
+                    codJasmin += "fstore " + valor[1] + "\n";
+                    break;
+                case "ID":
+                    codJasmin += "iload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "iadd\n";
+                    codJasmin += "istore " + valor[1] + "\n";
+                    break;
+            }
+        } else {
+            System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
+        }
+        return codJasmin;
     }
 
     @Override
     public String visitDec(LinguineParser.DecContext ctx) {
-        return super.visitDec(ctx);
+        String codJasmin = "";
+        if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
+            Object[] valor = tablaSimbolos.getVariable(ctx.ID().getText()).getValor();
+            String tipo = tablaSimbolos.getVariable(ctx.ID().getText()).getTipo();
+            switch (tipo) {
+                case "INT":
+                    codJasmin += "iload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "isub\n";
+                    codJasmin += "istore " + valor[1] + "\n";
+                    break;
+                case "FLOAT":
+                    codJasmin += "fload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "fsub\n";
+                    codJasmin += "fstore " + valor[1] + "\n";
+                    break;
+                case "ID":
+                    codJasmin += "iload " + valor[1] + "\n";
+                    codJasmin += "ldc 1\n";
+                    codJasmin += "isub\n";
+                    codJasmin += "istore " + valor[1] + "\n";
+                    break;
+            }
+        } else {
+            System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
+        }
+        return codJasmin;
     }
 
     @Override
@@ -137,19 +191,19 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     public String visitCondicional(LinguineParser.CondicionalContext ctx) {
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(2));
-        String etiqueta1 = "L" + getContadorEtiqueta();
+        String etiqElse = "L" + getContadorEtiqueta();
         String codRamaThen = visit(ctx.getChild(5));  // Genera código para la rama THEN
-        String etiqueta2 = "L" + getContadorEtiqueta();
+        String etiqThen = "L" + getContadorEtiqueta();
         String codRamaElse = "";
         if (ctx.getChildCount() > 7) {
             codRamaElse = visit(ctx.getChild(7));  // Genera código para la rama ELSE
         }
-        codJasmin += "ifeq " + etiqueta1 + "\n";
+        codJasmin += "ifeq " + etiqElse + "\n";
         codJasmin += codRamaThen;
-        codJasmin += "goto " + etiqueta2 + "\n";
-        codJasmin += etiqueta1 + ":\n";
+        codJasmin += "goto " + etiqThen + "\n";
+        codJasmin += etiqElse + ":\n";
         codJasmin += codRamaElse;
-        codJasmin += etiqueta2 + ":\n";
+        codJasmin += etiqThen + ":\n";
         return codJasmin;
     }
 
@@ -204,7 +258,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     codJasmin += visit(ctx.expresion());
                     codJasmin += "invokevirtual java/io/PrintStream/println(F)V\n";
                     break;
-                case "BOOL":
+                case "BOOLEAN":
                     codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
                     codJasmin += visit(ctx.expresion());
                     codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
@@ -243,7 +297,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitBool(LinguineParser.BoolContext ctx) {
+    public String visitBoolean(LinguineParser.BooleanContext ctx) {
         String codJasmin = "";
         if (ctx.getText().equals("true")){
             codJasmin += "ldc 1\n";
@@ -347,7 +401,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     case "FLOAT":
                         codJasmin += "fload "+ valor[1]+"\n";
                         break;
-                    case "BOOL":
+                    case "BOOLEAN":
                         codJasmin += "iload "+ valor[1]+"\n";
                         break;
                     case "ID":

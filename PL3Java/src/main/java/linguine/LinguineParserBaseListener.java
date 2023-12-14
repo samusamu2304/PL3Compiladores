@@ -233,18 +233,6 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBool(LinguineParser.BoolContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBool(LinguineParser.BoolContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLlamadaFuncion(LinguineParser.LlamadaFuncionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -324,6 +312,18 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitString(LinguineParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBoolean(LinguineParser.BooleanContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoolean(LinguineParser.BooleanContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
