@@ -34,6 +34,8 @@ LPAREN: '(';
 RPAREN: ')';
 COMMA: ',';
 ARROW: '->';
+LCURLY: '{';
+RCURLY: '}';
 SEMICOLON: ';';
 NLINE: [\r\n]+;
 QEST: '?';

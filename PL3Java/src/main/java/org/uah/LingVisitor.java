@@ -187,7 +187,11 @@ if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
         codJasmin += visit(ctx.expresion());
         codJasmin += "ldc 1\n";
         codJasmin += "if_icmpne " + endLabel + "\n";
-        codJasmin += visit(ctx.sentencia());
+        if (ctx.sentencia() != null){
+            for (LinguineParser.SentenciaContext sentenciaContext : ctx.sentencia()) {
+                codJasmin += visit(sentenciaContext);
+            }
+        }
         codJasmin += visit(ctx.asignacion());
         codJasmin += "goto " + repLabel + "\n";
         codJasmin += endLabel + ":\n";
@@ -196,7 +200,21 @@ if (tablaSimbolos.existeVariable(ctx.ID().getText())) {
 
     @Override
     public String visitWhile(LinguineParser.WhileContext ctx) {
-        return super.visitWhile(ctx);
+        String codJasmin = "";
+        String repLabel = "L" + getContadorEtiqueta();
+        String endLabel = "L" + getContadorEtiqueta();
+        codJasmin += repLabel + ":\n";
+        codJasmin += visit(ctx.expresion());
+        codJasmin += "ldc 1\n";
+        codJasmin += "if_icmpne " + endLabel + "\n";
+        if (ctx.sentencia() != null){
+            for (LinguineParser.SentenciaContext sentenciaContext : ctx.sentencia()) {
+                codJasmin += visit(sentenciaContext);
+            }
+        }
+        codJasmin += "goto " + repLabel + "\n";
+        codJasmin += endLabel + ":\n";
+        return codJasmin;
     }
 
     @Override

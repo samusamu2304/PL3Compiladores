@@ -1,1 +1,13 @@
-for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) show(i+j);
+let x = 0;
+let seguir = true;
+while (seguir) {show(x);
+ x++;
+ if (x>10) then seguir = false;
+ };
+ for (let x = 0; x<10; x++) {
+     show(x);
+     show("hola");
+     for (let y = 0; y<10; y++) {
+        show(y);
+     };
+ };

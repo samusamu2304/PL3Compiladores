@@ -28,9 +28,9 @@ asignacion: ID ASSIGN expresion # AsigSimple
         |ID MINUSMINUS  # Dec
         ;
 
-for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN sentencia;
+for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY;
 
-while: WHILE LPAREN expresion RPAREN sentencia;
+while: WHILE LPAREN expresion RPAREN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY;
 
 condicional: IF LPAREN expresion RPAREN THEN sentencia (ELSE sentencia)?;
 
