@@ -23,8 +23,8 @@ public class TablaSimbolos {
     public void updateVariable(String nombre,String tipo, int iVar, Object valor, String codigo){
         getSimbolo(nombre).updateVariable(tipo,iVar,valor,codigo);
     }
-    public void addFuncion(String nombre, int iVar, ArrayList<String> parametros, Object valor, String codigo){
-        tablaSimbolos.put(nombre, new Simbolo("FUNCION",iVar,"funcion",parametros,valor,codigo));
+    public void addFuncion(String nombre,String retorno, int iVar, ArrayList<String> parametros, Object valor, String codigo){
+        tablaSimbolos.put(nombre, new Simbolo("FUNCION",iVar,retorno,parametros,valor,codigo));//retorno es la clase
     }
 
     public Simbolo getSimbolo(String nombre){
@@ -83,7 +83,7 @@ public class TablaSimbolos {
     public String getFunciones(){
         String funciones = "";
         for (Map.Entry<String, Simbolo> entry : tablaSimbolos.entrySet()) {
-            if (entry.getValue().getClase().equals("funcion")){
+            if (entry.getValue().getTipo().equals("FUNCION")){
                 funciones += entry.getValue().getCodigo();
             }
         }

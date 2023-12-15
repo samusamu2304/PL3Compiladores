@@ -24,29 +24,51 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
         if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             int iVar = tablaSimbolos.getSimbolo(ctx.ID().getText()).getiVar();
             String tipo = tablaSimbolos.getSimbolo(ctx.ID().getText()).getTipo();
-            String resultado = visit(ctx.expresion());
-            codJasmin += resultado;
-            switch (tipo) {
-                case "INT":
+            if (ctx.expresion() instanceof LinguineParser.LlamadaFuncionContext) {
+                LinguineParser.LlamadaFuncionContext llamadaFuncion = (LinguineParser.LlamadaFuncionContext) ctx.expresion();
+                String retorno = tablaSimbolos.getSimbolo(llamadaFuncion.ID().getText()).getClase();
+                if (retorno.equals("int")) {
+                    codJasmin += visit(llamadaFuncion);
                     codJasmin += "istore " + iVar + "\n";
-                    break;
-                case "STRING":
+                    tipo = "INT";
+                } else if (retorno.equals("string")) {
+                    codJasmin += visit(llamadaFuncion);
                     codJasmin += "astore " + iVar + "\n";
-                    break;
-                case "FLOAT":
+                    tipo = "STRING";
+                } else if (retorno.equals("float")) {
+                    codJasmin += visit(llamadaFuncion);
                     codJasmin += "fstore " + iVar + "\n";
-                    break;
-                case "BOOLEAN":
+                    tipo = "FLOAT";
+                } else if (retorno.equals("boolean")) {
+                    codJasmin += visit(llamadaFuncion);
                     codJasmin += "istore " + iVar + "\n";
-                    break;
-                case "ID":
+                    tipo = "BOOLEAN";
+                } else if (retorno.equals("id")) {
+                    codJasmin += visit(llamadaFuncion);
                     codJasmin += "istore " + iVar + "\n";
-                    break;
-                case "CODIGO":
-                    //no se hace nada por ahora
-                    break;
+                    tipo = "ID";
+                }
+            } else {
+                codJasmin += visit(ctx.expresion());
+                switch (tipo) {
+                    case "INT":
+                        codJasmin += "istore " + iVar + "\n";
+                        break;
+                    case "STRING":
+                        codJasmin += "astore " + iVar + "\n";
+                        break;
+                    case "FLOAT":
+                        codJasmin += "fstore " + iVar + "\n";
+                        break;
+                    case "BOOLEAN":
+                        codJasmin += "istore " + iVar + "\n";
+                        break;
+                    case "ID":
+                        codJasmin += "istore " + iVar + "\n";
+                        break;
+                }
             }
-            tablaSimbolos.updateVariable(ctx.ID().getText(),tipo,iVar,resultado,resultado);//actualiza el valor del codigo
+            tablaSimbolos.updateVariable(ctx.ID().getText(),tipo,iVar,"desconocido","desconocido");//actualiza el valor del codigo
         } else {
             System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
         }
@@ -103,7 +125,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     @Override
     public String visitDeclaracion(LinguineParser.DeclaracionContext ctx) {
         Object valor = null;
-        int iVar = 0;
+        int iVar = getContadorEtiqueta();
         String tipo = "desconocido";
         String codJasmin = "";
         String codigo = "desconocido";
@@ -117,7 +139,6 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     codJasmin += visit(ctx.getChild(3));
                     codigo = codJasmin;
                     valor = terminalNode.getText();
-                    iVar = getContadorEtiqueta();
                     switch (tipo) {
                         case "INT":
                             codJasmin += "istore " + iVar + "\n";
@@ -135,9 +156,34 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                             codJasmin += "istore " + iVar + "\n";
                             break;
                     }
-                } else {
-                    valor = "desconocido";
-                    tipo = "CODIGO";
+                } else {//en este caso se ha asignado seguramente la salida de una funcion
+                    if (ctx.getChild(3) instanceof LinguineParser.LlamadaFuncionContext) {
+                        LinguineParser.LlamadaFuncionContext llamadaFuncion = (LinguineParser.LlamadaFuncionContext) ctx.getChild(3);
+                        String retorno = tablaSimbolos.getSimbolo(llamadaFuncion.ID().getText()).getClase();
+                        if (retorno.equals("int")) {
+                            codJasmin += visit(llamadaFuncion);
+                            codJasmin += "istore " + iVar + "\n";
+                            tipo = "INT";
+                        } else if (retorno.equals("string")) {
+                            codJasmin += visit(llamadaFuncion);
+                            codJasmin += "astore " + iVar + "\n";
+                            tipo = "STRING";
+                        } else if (retorno.equals("float")) {
+                            codJasmin += visit(llamadaFuncion);
+                            codJasmin += "fstore " + iVar + "\n";
+                            tipo = "FLOAT";
+                        } else if (retorno.equals("boolean")) {
+                            codJasmin += visit(llamadaFuncion);
+                            codJasmin += "istore " + iVar + "\n";
+                            tipo = "BOOLEAN";
+                        } else if (retorno.equals("id")) {
+                            codJasmin += visit(llamadaFuncion);
+                            codJasmin += "istore " + iVar + "\n";
+                            tipo = "ID";
+                        }
+                    }else{
+                            codJasmin += visit(ctx.getChild(3));
+                    }
                 }
                 break;
             case "condicional":
@@ -145,7 +191,6 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                 codJasmin += visit(ctx.getChild(3));
                 valor = "desconocido";
                 codigo = "condicional/match";
-                iVar = getContadorEtiqueta();
                 codJasmin+= "istore "+iVar+"\n";
                 tipo = "INT";//solo asignamos int porque no tenemos manera factible de saber el tipo
                 break;
@@ -338,7 +383,6 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     @Override
     public String visitFuncion(LinguineParser.FuncionContext ctx) {
-        //TODO: Completar esta cagada
         if (ctx.getParent().getParent() instanceof LinguineParser.ProgramContext) {
             FuncVisitor funcVisitor = new FuncVisitor(new TablaSimbolos(), parser);
             funcVisitor.addParametros(ctx.params().ID());
@@ -358,11 +402,11 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             codFuncion += ".method public static " + ctx.ID().getText() + "(" + sParam + ")I\n";
             codFuncion += ".limit stack 100\n";
             codFuncion += ".limit locals 100\n";
-            funcVisitor.tablaSimbolos.addFuncion(ctx.ID().getText(),  0,  params, sParam, "desconocido");
+            funcVisitor.tablaSimbolos.addFuncion(ctx.ID().getText(),  "int",0,  params, sParam, "desconocido");
             codFuncion += funcVisitor.visit(ctx.sentencia());
             codFuncion += "ireturn\n";
             codFuncion += ".end method\n";
-            tablaSimbolos.addFuncion(ctx.ID().getText(),  0,  params, sParam, codFuncion);
+            tablaSimbolos.addFuncion(ctx.ID().getText(),  "int",0,  params, sParam, codFuncion);
         }
         return "";
     }
@@ -410,11 +454,9 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
                     break;
             }
         } else {
-            //TODO gestionar cuando hay varias cosas
-            /** Se asume que si hay varias cosas, es un string (gestionar mas tarde si da tiempo) **/
             codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
             codJasmin += visit(ctx.expresion());
-            codJasmin += "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n";
+            codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
         }
 
         return codJasmin;
@@ -503,22 +545,27 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(0));
         codJasmin += visit(ctx.getChild(2));
-        if (obtenerTipo(ctx.expresion(0)).equals("STRING") && obtenerTipo(ctx.expresion(1)).equals("STRING") && ctx.getChild(1).getText().equals("+")){
+
+        String tipo1 = obtenerTipo(ctx.expresion(0));
+        String tipo2 = obtenerTipo(ctx.expresion(1));
+
+        if (tipo1.equals("STRING") && tipo2.equals("STRING") && ctx.getChild(1).getText().equals("+")){
             codJasmin += "invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;\n";
-        }else if (obtenerTipo(ctx.expresion(0)).equals("INT") && obtenerTipo(ctx.expresion(1)).equals("INT")){
+        }else if (tipo1.equals("INT") && tipo2.equals("INT")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "iadd\n";
             } else {
                 codJasmin += "isub\n";
             }
-        } else if (obtenerTipo(ctx.expresion(0)).equals("FLOAT") && obtenerTipo(ctx.expresion(1)).equals("FLOAT")){
+        } else if (tipo1.equals("FLOAT") && tipo2.equals("FLOAT")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "fadd\n";
             } else {
                 codJasmin += "fsub\n";
             }
-        }else if (obtenerTipo(ctx.expresion(0)).equals("ID") && obtenerTipo(ctx.expresion(1)).equals("INT")
-        || obtenerTipo(ctx.expresion(0)).equals("INT") && obtenerTipo(ctx.expresion(1)).equals("ID")){
+        }else if (tipo1.equals("ID") && tipo2.equals("INT")
+        || tipo1.equals("INT") && tipo2.equals("ID")
+                || tipo1.equals("ID") && tipo2.equals("ID")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "iadd\n";
             } else {
@@ -526,7 +573,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             }
         }
         else{
-            System.out.println("Error: no se pueden sumar o restar tipos distintos.");
+            System.out.println("Error: no se pueden sumar o restar tipos distintos (" + tipo1 + " y " + tipo2 + ").");
         }
         return codJasmin;
     }
@@ -618,8 +665,15 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     @Override
     public String visitAndOr(LinguineParser.AndOrContext ctx) {
-        //TODO: Añadir operacion
-        return super.visitAndOr(ctx);
+        String codJasmin = "";
+        codJasmin += visit(ctx.getChild(0));
+        codJasmin += visit(ctx.getChild(2));
+        if (ctx.getChild(1).getText().equals("&&")){
+            codJasmin += "iand\n";
+        }else{
+            codJasmin += "ior\n";
+        }
+        return codJasmin;
     }
 
     @Override

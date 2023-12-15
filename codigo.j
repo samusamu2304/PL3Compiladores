@@ -6,15 +6,15 @@
    .limit locals 100
 
 ldc 0
-istore 2
+istore 1
 
 
 ldc 3
 invokestatic Linguine/factorial(I)I
-istore 2
+istore 1
 
 getstatic java/lang/System/out Ljava/io/PrintStream;
-iload 2
+iload 1
 invokevirtual java/io/PrintStream/println(I)V
 
 return
