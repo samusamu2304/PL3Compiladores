@@ -5,43 +5,39 @@
    .limit stack 100
    .limit locals 100
 
-ldc 0
+
+ldc 6
+invokestatic Linguine/fib(I)I
 istore 1
-
-
-ldc 3
-invokestatic Linguine/factorial(I)I
-istore 1
-
-getstatic java/lang/System/out Ljava/io/PrintStream;
-iload 1
-invokevirtual java/io/PrintStream/println(I)V
 
 return
 
 .end method
-.method public static factorial(I)I
+.method public static fib(I)I
 .limit stack 100
 .limit locals 100
+L3:
 iload 0
 ldc 0
-if_icmpeq L4
+if_icmpne L4
 ldc 0
-goto L5
+goto L1
 L4:
+iload 0
 ldc 1
-L5:
-ldc 1
-if_icmpne L2
+if_icmpne L5
 ldc 1
 goto L1
-L2:
-iload 0
+L5:
 iload 0
 ldc 1
 isub
-invokestatic Linguine/factorial(I)I
-imul
+invokestatic Linguine/fib(I)I
+iload 0
+ldc 2
+isub
+invokestatic Linguine/fib(I)I
+iadd
 L1:
 ireturn
 .end method

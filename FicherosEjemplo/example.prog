@@ -1,4 +1,5 @@
-let x = 0;
-fun factorial(n) -> if (n == 0) then 1 else n * factorial(n - 1);
-x = factorial(3);
-show(x);
+fun fib(n) -> match n with
+| 0 -> 0
+| 1 -> 1
+| ? -> fib(n - 1) + fib(n - 2);
+let result = fib(6);

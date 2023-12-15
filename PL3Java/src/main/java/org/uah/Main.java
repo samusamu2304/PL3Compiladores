@@ -14,13 +14,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Linguine");
+
+        System.out.println("#=========================================================#");
+        System.out.println("|                  Bienvenido a Linguine                  |");
+        System.out.println("#=========================================================#");
+        System.out.println();
+
         InputStream is = System.in;
         String inputFile = "FicherosEjemplo/example.prog";//Solo sirve en el IDE
         if (args.length >= 1){
             if (args[0].contains("-txt")){
                 Scanner sc = new Scanner(is);
-                System.out.println("Introduzca el texto a analizar:");
+                System.out.println("> Leyendo código desde la entrada estándar.");
+                System.out.println("> Introduzca el texto a analizar:");
                 String codigo = "";
                 while (sc.hasNextLine()){
                     codigo += sc.nextLine()+"\n";
@@ -38,8 +44,13 @@ public class Main {
                 }
             }else{
                 inputFile = args[0];
+                System.out.println("> Leyendo código desde el archivo " + inputFile);
             }
         }
+        else{
+            System.out.println("> Leyendo código desde el archivo " + inputFile);
+        }
+
         ANTLRInputStream input = null;
         try {
             is = new FileInputStream(inputFile);
@@ -47,6 +58,9 @@ public class Main {
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
+
+        System.out.println("> Comprobando sintaxis del código");
+
         LinguineLexer lexer = new LinguineLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         LinguineParser parser = new LinguineParser(tokens);
@@ -67,8 +81,13 @@ public class Main {
         //addStringFunctions(tablaSimbolos);
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
+
+        System.out.println();
+
         String jasminFile = createJasminFile(jasmineCode);
         jasminFile += tablaSimbolos.getFunciones();
+
+        System.out.println("--------------- Código intermedio generado ----------------");
         System.out.println(jasminFile);
         try {
             FileWriter myWriter = new FileWriter("codigo.j");

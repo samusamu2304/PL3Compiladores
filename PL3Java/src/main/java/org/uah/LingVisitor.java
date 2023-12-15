@@ -66,6 +66,9 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     case "ID":
                         codJasmin += "istore " + iVar + "\n";
                         break;
+                    default:
+                        codJasmin += "istore " + iVar + "\n";
+                        break;
                 }
             }
             tablaSimbolos.updateVariable(ctx.ID().getText(),tipo,iVar,"desconocido","desconocido");//actualiza el valor del codigo
@@ -124,7 +127,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
 
     @Override
     public String visitDeclaracion(LinguineParser.DeclaracionContext ctx) {
-        Object valor = null;
+        Object valor = "desconocido";
         int iVar = getContadorEtiqueta();
         String tipo = "desconocido";
         String codJasmin = "";
@@ -155,6 +158,9 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                         case "ID":
                             codJasmin += "istore " + iVar + "\n";
                             break;
+                        default:
+                            codJasmin += "istore " + iVar + "\n";
+                            break;
                     }
                 } else {//en este caso se ha asignado seguramente la salida de una funcion
                     if (ctx.getChild(3) instanceof LinguineParser.LlamadaFuncionContext) {
@@ -183,6 +189,7 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                         }
                     }else{
                             codJasmin += visit(ctx.getChild(3));
+                            codJasmin += "istore " + iVar + "\n";
                     }
                 }
                 break;
@@ -420,6 +427,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     public String visitShow(LinguineParser.ShowContext ctx) {
         String codJasmin = "";
         String tipo = "desconocido";
+        int iVar = 0;
         if (ctx.expresion().getChildCount() == 1) {
             TerminalNode terminalNode = (TerminalNode) ctx.expresion().getChild(0);
             int tipoToken = terminalNode.getSymbol().getType();
@@ -427,6 +435,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             if (tipo.equals("ID")) {
                 if (tablaSimbolos.existeSimbolo(ctx.expresion().getText())) {
                     tipo = tablaSimbolos.getSimbolo(ctx.expresion().getText()).getTipo();
+                    iVar = tablaSimbolos.getSimbolo(ctx.expresion().getText()).getiVar();
                 } else {
                     System.out.println("Error: la variable " + ctx.expresion().getText() + " no fue declarada.");
                 }
@@ -450,6 +459,11 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
                 case "BOOLEAN":
                     codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
                     codJasmin += visit(ctx.expresion());
+                    codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
+                    break;
+                default:
+                    codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
+                    codJasmin += "iload " + iVar + "\n";
                     codJasmin += "invokevirtual java/io/PrintStream/println(I)V\n";
                     break;
             }
