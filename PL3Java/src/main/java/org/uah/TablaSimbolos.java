@@ -61,8 +61,17 @@ public class TablaSimbolos {
         return existe;
     }
     public void printTabla(){
+        System.out.println("-------------------- Tabla de símbolos --------------------");
+        System.out.println("      Nombre     |    Tipo    |    Clase    |    Valor     ");
         for (Map.Entry<String, Simbolo> entry : tablaSimbolos.entrySet()) {
-            System.out.println(entry);
+            Simbolo s = entry.getValue();
+
+            String str = String.format(" %-15s | %-10s | %-11s | %-10s\n",
+                    entry.getKey(),
+                    s.getTipo(),
+                    s.getClase(),
+                    !s.getValor().equals("funcion") ? s.getValor() : "...");
+            System.out.println(str);
         }
     }
     public TablaSimbolos clone(){
