@@ -7,7 +7,6 @@ public class FuncVisitor extends LingVisitor{
         super(tablaSimbolos.clone(), parser);
     }
     public void addParam(String nombre){
-        tablaSimbolos.addVariable(nombre,"desconocido",null);
     }
 
 }
