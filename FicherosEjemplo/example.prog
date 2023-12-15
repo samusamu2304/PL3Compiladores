@@ -1,4 +1,4 @@
 let x = 0;
-fun factorial(n) -> if (n == 0) then {1;} else {n * factorial(n - 1);};
+fun factorial(n) -> if (n == 0) then 1 else n * factorial(n - 1);
 x = factorial(3);
 show(x);
