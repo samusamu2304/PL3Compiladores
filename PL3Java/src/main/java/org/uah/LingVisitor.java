@@ -407,20 +407,22 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         List<LinguineParser.CaseContext> caseNodes = ctx.case_();
         List<LinguineParser.ExpresionContext> expresiones =  ctx.expresion();
         int etiquetaSalto = getContadorEtiqueta();
-            int[] etiquetasCase = new int[caseNodes.size()];
+            int[] etiquetasCase = new int[caseNodes.size()+1];
             int etiquetaQuest = getContadorEtiqueta();
             for (int i = 0; i < caseNodes.size(); i++) {
                 etiquetasCase[i] = getContadorEtiqueta();
             }
             for (int i = 0; i < caseNodes.size(); i++) {//itera sobre los case
+                codJasmin += "L" + etiquetasCase[i] + ":\n";//bloque case
                 codJasmin += visit(expresiones.get(0));
                 codJasmin += visit(caseNodes.get(i).expresion(0));
-                codJasmin += etiquetasCase.length < i+1 ? "if_icmpne L" + etiquetasCase[i+1] + "\n" : "if_icmpne L" + etiquetaQuest + "\n";
+                codJasmin += "if_icmpne L" + etiquetasCase[i+1] + "\n";
                 codJasmin += visit(caseNodes.get(i).expresion(1));
                 codJasmin += "goto L" + etiquetaSalto + "\n";
             }
             if (expresiones.size() == 2) {
-                codJasmin += "L" + etiquetaQuest + ":\n" + visit(expresiones.get(1));//bloque default
+                codJasmin += "L" + etiquetasCase[caseNodes.size()] + ":\n";//bloque default
+                codJasmin += visit(expresiones.get(1));//bloque default
             }
             codJasmin += "L" + etiquetaSalto + ":\n";
         return codJasmin;

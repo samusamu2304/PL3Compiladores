@@ -154,17 +154,19 @@ invokevirtual java/io/PrintStream/println(I)V
 ldc 2
 istore 1
 
+L33:
 iload 1
 ldc 1
-if_icmpne L32
+if_icmpne L34
 ldc "One"
 goto L31
+L34:
 iload 1
 ldc 2
-if_icmpne L32
+if_icmpne L0
 ldc "Two"
 goto L31
-L32:
+L0:
 ldc "Other"
 L31:
 istore 1
