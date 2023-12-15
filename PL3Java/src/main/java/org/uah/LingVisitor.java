@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.List;
+
 public class LingVisitor extends LinguineParserBaseVisitor<String> {
     TablaSimbolos tablaSimbolos;
     LinguineParser parser;
@@ -49,6 +51,43 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
     }
 
     @Override
+    public String visitAsigCond(LinguineParser.AsigCondContext ctx) {
+        //solo permite asignar enteros
+        String codJasmin = "";
+        if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
+            int iVar = tablaSimbolos.getSimbolo(ctx.ID().getText()).getiVar();
+            String tipo = tablaSimbolos.getSimbolo(ctx.ID().getText()).getTipo();
+            String valor = "desconocido";
+            String codigo = "condicional";
+            codJasmin += visit(ctx.condicional());
+            codJasmin += "istore " + iVar + "\n";
+            tablaSimbolos.updateVariable(ctx.ID().getText(),tipo,iVar,valor,codigo);
+        } else {
+            System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
+        }
+        return codJasmin;
+    }
+
+    @Override
+    public String visitAsigMatch(LinguineParser.AsigMatchContext ctx) {
+        //solo permite asignar enteros
+        String codJasmin = "";
+        if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
+            int iVar = tablaSimbolos.getSimbolo(ctx.ID().getText()).getiVar();
+            String tipo = tablaSimbolos.getSimbolo(ctx.ID().getText()).getTipo();
+            String valor = "desconocido";
+            String codigo = "match";
+            codJasmin += visit(ctx.match());
+            codJasmin += "istore " + iVar + "\n";
+            tablaSimbolos.updateVariable(ctx.ID().getText(),tipo,iVar,valor,codigo);
+        } else {
+            System.out.println("Error: la variable " + ctx.ID().getText() + " no fue declarada.");
+        }
+        return codJasmin;
+    }
+
+
+    @Override
     public String visitProgram(LinguineParser.ProgramContext ctx) {
         return visitChildren(ctx);
     }
@@ -64,7 +103,9 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
         int iVar = 0;
         String tipo = "desconocido";
         String codJasmin = "";
+        String codigo = "desconocido";
         String regla = parser.getRuleNames()[(((ParserRuleContext) ctx.getChild(3)).getRuleIndex())];
+        System.out.println(regla);
         switch (regla) {
             case "expresion":
                 if (ctx.getChild(3).getChildCount() == 1) {
@@ -72,7 +113,8 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                     int tipoToken = terminalNode.getSymbol().getType();
                     tipo = parser.VOCABULARY.getSymbolicName(tipoToken);
                     codJasmin += visit(ctx.getChild(3));
-                    valor = codJasmin;
+                    codigo = codJasmin;
+                    valor = terminalNode.getText();
                     iVar = getContadorEtiqueta();
                     switch (tipo) {
                         case "INT":
@@ -92,20 +134,21 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
                             break;
                     }
                 } else {
-                    valor = visit(ctx.getChild(3));
+                    valor = "desconocido";
                     tipo = "CODIGO";
                 }
                 break;
             case "condicional":
-                valor = visit(ctx.getChild(3));
-                tipo = "CODIGO";
-                break;
             case "match":
-                valor = visit(ctx.getChild(3));
-                tipo = "CODIGO";
+                codJasmin += visit(ctx.getChild(3));
+                valor = "desconocido";
+                codigo = "condicional/match";
+                iVar = getContadorEtiqueta();
+                codJasmin+= "istore "+iVar+"\n";
+                tipo = "INT";//solo asignamos int porque no tenemos manera factible de saber el tipo
                 break;
         }
-        tablaSimbolos.addVariable(ctx.ID().getText(), tipo, iVar, "variable", valor, valor.toString());
+        tablaSimbolos.addVariable(ctx.ID().getText(), tipo, iVar, "variable", valor, codigo);
         return codJasmin;
     }
 
@@ -223,20 +266,70 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     public String visitCondicional(LinguineParser.CondicionalContext ctx) {
         tablaSimbolos.pushTabla();
         String codJasmin = "";
-        codJasmin += visit(ctx.getChild(2));
-        String etiqElse = "L" + getContadorEtiqueta();
-        String codRamaThen = visit(ctx.getChild(5));  // Genera código para la rama THEN
-        String etiqThen = "L" + getContadorEtiqueta();
-        String codRamaElse = "";
-        if (ctx.getChildCount() > 7) {
-            codRamaElse = visit(ctx.getChild(7));  // Genera código para la rama ELSE
+        TerminalNode elseNode = ctx.ELSE();
+        List<TerminalNode> elseifNodes = ctx.ELSEIF();
+        List<LinguineParser.ExpresionContext> expresiones =  ctx.expresion();
+        int etiquetaSalto = getContadorEtiqueta();
+        if (expresiones.size() == 1 && elseNode == null) {//if sin else
+            codJasmin += visit(expresiones.get(0));
+            codJasmin += "ldc 1\n";
+            codJasmin += "if_icmpne L" + etiquetaSalto + "\n";
+            codJasmin += visit(ctx.sentencia(0));
+            codJasmin += "L" + etiquetaSalto + ":\n";
+        } else if (expresiones.size() == 1 && elseifNodes.isEmpty()) {//if con else
+            int etiquetaElse = getContadorEtiqueta();
+            codJasmin += visit(expresiones.get(0));
+            codJasmin += "ldc 1\n";
+            codJasmin += "if_icmpne L" + etiquetaElse + "\n";
+            codJasmin += visit(ctx.sentencia(0));
+            codJasmin += "goto L" + etiquetaSalto + "\n";
+            codJasmin += "L" + etiquetaElse + ":\n";
+            codJasmin += visit(ctx.sentencia(1));
+            codJasmin += "L" + etiquetaSalto + ":\n";
+        }else if (elseNode == null) {//if con elseif sin else
+            int[] etiquetasElseIf = new int[elseifNodes.size()];
+            for (int i = 0; i < elseifNodes.size(); i++) {
+                etiquetasElseIf[i] = getContadorEtiqueta();
+            }
+            codJasmin += visit(expresiones.get(0));
+            codJasmin += "ldc 1\n";
+            codJasmin += "if_icmpne L" + etiquetasElseIf[0] + "\n";
+            codJasmin += visit(ctx.sentencia(0));
+            codJasmin += "goto L" + etiquetaSalto + "\n";
+            for (int i = 0; i < elseifNodes.size()-1; i++) {
+                codJasmin += "L" + etiquetasElseIf[i] + ":\n";
+                codJasmin += visit(expresiones.get(i));
+                codJasmin += "ldc 1\n";
+                int siguienteSalto = etiquetasElseIf.length-1 == i ? etiquetaSalto : etiquetasElseIf[i+1];
+                codJasmin += "if_icmpne L" + siguienteSalto + "\n";
+                codJasmin += visit(ctx.sentencia(i+1));
+                codJasmin += "goto L" + etiquetaSalto + "\n";
+            }
+            codJasmin += "L" + etiquetaSalto + ":\n";
+        }else{//if con elseif y else
+            int[] etiquetasElseIf = new int[elseifNodes.size()];
+            int etiquetaElse = getContadorEtiqueta();
+            for (int i = 0; i < elseifNodes.size(); i++) {
+                etiquetasElseIf[i] = getContadorEtiqueta();
+            }
+            codJasmin += visit(expresiones.get(0));//bloque if
+            codJasmin += "ldc 1\n";
+            codJasmin += "if_icmpne L" + etiquetasElseIf[0] + "\n";
+            codJasmin += visit(ctx.sentencia(0));
+            codJasmin += "goto L" + etiquetaSalto + "\n";
+            for (int i = 0; i < elseifNodes.size(); i++) {//itera sobre los elseif
+                codJasmin += "L" + etiquetasElseIf[i] + ":\n";//bloque elseif
+                codJasmin += visit(expresiones.get(i+1));
+                codJasmin += "ldc 1\n";
+                int siguienteSalto = etiquetasElseIf.length-1 == i ? etiquetaElse : etiquetasElseIf[i+1];
+                codJasmin += "if_icmpne L" + siguienteSalto + "\n";
+                codJasmin += visit(ctx.sentencia(i+1));
+                codJasmin += "goto L" + etiquetaSalto + "\n";
+            }
+            codJasmin += "L" + etiquetaElse + ":\n";//bloque else
+            codJasmin += visit(ctx.sentencia(ctx.sentencia().size()-1));
+            codJasmin += "L" + etiquetaSalto + ":\n";
         }
-        codJasmin += "ifeq " + etiqElse + "\n";
-        codJasmin += codRamaThen;
-        codJasmin += "goto " + etiqThen + "\n";
-        codJasmin += etiqElse + ":\n";
-        codJasmin += codRamaElse;
-        codJasmin += etiqThen + ":\n";
         tablaSimbolos.popTabla();
         return codJasmin;
     }
@@ -246,7 +339,6 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         //TODO: Completar esta cagada
         String codJasmin = "";
         codJasmin += ".method public static "+ctx.ID().getText()+"(";
-        codJasmin += toRomans(ctx.params().getChildCount()) + ")I\n";
         codJasmin += ".limit stack 100\n";
         codJasmin += ".limit locals 100\n";
         FuncVisitor funcVisitor = new FuncVisitor(tablaSimbolos, parser);
@@ -347,7 +439,6 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     public String visitLlamadaFuncion(LinguineParser.LlamadaFuncionContext ctx) {
         String codJasmin = "";
         codJasmin += "invokestatic "+ ctx.ID().getText()+"(";
-        codJasmin += toRomans(ctx.args().getChildCount()) + ")I\n";
         return codJasmin;
     }
 
@@ -486,33 +577,8 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     }
 
     @Override
-    public String visitAsigCond(LinguineParser.AsigCondContext ctx) {
-        return super.visitAsigCond(ctx);
-    }
-
-    @Override
-    public String visitAsigMatch(LinguineParser.AsigMatchContext ctx) {
-        return super.visitAsigMatch(ctx);
-    }
-
-    @Override
     public String visitArgs(LinguineParser.ArgsContext ctx) {
         return super.visitArgs(ctx);
-    }
-
-    private String toRomans(int number) {
-        String roman = "";
-        int repeat;
-        int[] decimal = {1000, 500, 100, 50, 10, 5, 1};
-        String[] romanSymbols = {"M", "D", "C", "L", "X", "V", "I"};
-        for (int i = 0; i < decimal.length; i++) {
-            repeat = number / decimal[i];
-            for (int j = 1; j <= repeat; j++) {
-                roman += romanSymbols[i];
-            }
-            number %= decimal[i];
-        }
-        return roman;
     }
 
     private int contadorEtiqueta = 1;//0 reservado

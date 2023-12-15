@@ -2,7 +2,16 @@ let x = 0;
 let seguir = true;
 while (seguir) {show(x);
  x++;
- if (x>10) then seguir = false;
+ if (x>10) then {
+    seguir = false;
+ }elseif(x>6) then{
+    show("bucle medio");
+ }elseif(x>3) then{
+      show("bucle medio medio");
+  }
+ else{
+    show("bucle sigue");
+ };
  };
  let y = "hola";
  for (let x = 0; x<10; x++) {
@@ -12,3 +21,7 @@ while (seguir) {show(x);
         show(y);
      };
  };
+ x = 0;
+ let w = 0;
+w = if ( x > 0 ) then { 1; }else { 2;};
+show(w);

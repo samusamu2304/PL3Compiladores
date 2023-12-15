@@ -4,6 +4,7 @@ LET: 'let';
 IF: 'if';
 THEN: 'then';
 ELSE: 'else';
+ELSEIF: 'elseif';
 FOR: 'for';
 WHILE: 'while';
 FUN: 'fun';

@@ -32,7 +32,10 @@ for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN LCUR
 
 while: WHILE LPAREN expresion RPAREN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY;
 
-condicional: IF LPAREN expresion RPAREN THEN sentencia (ELSE sentencia)?;
+condicional: IF LPAREN expresion RPAREN THEN
+ LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY
+ (ELSEIF LPAREN expresion RPAREN THEN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY)*
+ (ELSE LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY)?;
 
 funcion: FUN ID LPAREN params RPAREN ARROW (sentencia);
 
