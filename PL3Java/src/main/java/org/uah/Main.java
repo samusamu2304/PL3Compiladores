@@ -58,7 +58,8 @@ public class Main {
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
-        System.out.println();
+
+        System.out.println("> Comprobando sintaxis del código");
 
         LinguineLexer lexer = new LinguineLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -67,6 +68,7 @@ public class Main {
         ParseTreeWalker walker = new ParseTreeWalker();
         TablaSimbolos tablaSimbolos = new TablaSimbolos();
         TreeListener listener = new TreeListener(tablaSimbolos);
+
         // System.out.println("\n\n");
         // System.out.println("Tabla de variables");
         // walker.walk(listener, tree);
@@ -80,8 +82,10 @@ public class Main {
 
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
-        String jasminFile = createJasminFile(jasmineCode);
 
+        System.out.println();
+
+        String jasminFile = createJasminFile(jasmineCode);
         jasminFile += tablaSimbolos.getFunciones();
 
         System.out.println("--------------- Código intermedio generado ----------------");
