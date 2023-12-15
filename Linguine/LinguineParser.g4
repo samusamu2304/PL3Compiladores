@@ -43,11 +43,8 @@ params: ID (COMMA ID)*;
 
 show: SHOW LPAREN expresion RPAREN;
 
-match: MATCH expresion WITH cases;
-
-cases: (NLINE case)+;
-
-case: PIPE (expresion | QEST) ARROW expresion;
+match: MATCH expresion WITH case+ (NLINE PIPE QEST ARROW expresion)?;
+case: NLINE PIPE expresion ARROW expresion;
 
 expresion:  expresion (MUL | DIV) expresion # MulDiv
         | expresion (PLUS | MINUS) expresion    # AddSub

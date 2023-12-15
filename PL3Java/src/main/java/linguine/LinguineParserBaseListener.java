@@ -197,18 +197,6 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCases(LinguineParser.CasesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCases(LinguineParser.CasesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCase(LinguineParser.CaseContext ctx) { }
 	/**
 	 * {@inheritDoc}

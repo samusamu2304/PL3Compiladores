@@ -25,3 +25,9 @@ while (seguir) {show(x);
  let w = 0;
 w = if ( x > 0 ) then { 1; }else { 2;};
 show(w);
+x = 2;
+x = match x with
+| 1 -> "One"
+| 2 -> "Two"
+| ? -> "Other";
+show(x);

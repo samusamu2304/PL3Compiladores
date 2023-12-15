@@ -168,16 +168,6 @@ public interface LinguineParserListener extends ParseTreeListener {
 	 */
 	void exitMatch(LinguineParser.MatchContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link LinguineParser#cases}.
-	 * @param ctx the parse tree
-	 */
-	void enterCases(LinguineParser.CasesContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link LinguineParser#cases}.
-	 * @param ctx the parse tree
-	 */
-	void exitCases(LinguineParser.CasesContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link LinguineParser#case}.
 	 * @param ctx the parse tree
 	 */

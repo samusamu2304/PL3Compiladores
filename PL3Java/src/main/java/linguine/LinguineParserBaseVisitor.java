@@ -123,13 +123,6 @@ public class LinguineParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> im
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCases(LinguineParser.CasesContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitCase(LinguineParser.CaseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

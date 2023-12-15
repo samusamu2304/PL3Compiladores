@@ -392,7 +392,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             }
         } else {
             //TODO gestionar cuando hay varias cosas
-            /** Se asume que si hay varias cosas, es un int (gestionar mas tarde si da tiempo) **/
+            /** Se asume que si hay varias cosas, es un string (gestionar mas tarde si da tiempo) **/
             codJasmin += "getstatic java/lang/System/out Ljava/io/PrintStream;\n";
             codJasmin += visit(ctx.expresion());
             codJasmin += "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n";
@@ -403,19 +403,29 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     @Override
     public String visitMatch(LinguineParser.MatchContext ctx) {
-        //TODO: Programar el match, posible cambio en la gramatica
-        return super.visitMatch(ctx);
+        String codJasmin = "";
+        List<LinguineParser.CaseContext> caseNodes = ctx.case_();
+        List<LinguineParser.ExpresionContext> expresiones =  ctx.expresion();
+        int etiquetaSalto = getContadorEtiqueta();
+            int[] etiquetasCase = new int[caseNodes.size()];
+            int etiquetaQuest = getContadorEtiqueta();
+            for (int i = 0; i < caseNodes.size(); i++) {
+                etiquetasCase[i] = getContadorEtiqueta();
+            }
+            for (int i = 0; i < caseNodes.size(); i++) {//itera sobre los case
+                codJasmin += visit(expresiones.get(0));
+                codJasmin += visit(caseNodes.get(i).expresion(0));
+                codJasmin += etiquetasCase.length < i+1 ? "if_icmpne L" + etiquetasCase[i+1] + "\n" : "if_icmpne L" + etiquetaQuest + "\n";
+                codJasmin += visit(caseNodes.get(i).expresion(1));
+                codJasmin += "goto L" + etiquetaSalto + "\n";
+            }
+            if (expresiones.size() == 2) {
+                codJasmin += "L" + etiquetaQuest + ":\n" + visit(expresiones.get(1));//bloque default
+            }
+            codJasmin += "L" + etiquetaSalto + ":\n";
+        return codJasmin;
     }
 
-    @Override
-    public String visitCases(LinguineParser.CasesContext ctx) {
-        return super.visitCases(ctx);
-    }
-
-    @Override
-    public String visitCase(LinguineParser.CaseContext ctx) {
-        return super.visitCase(ctx);
-    }
 
     @Override
     public String visitFloat(LinguineParser.FloatContext ctx) {

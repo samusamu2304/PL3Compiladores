@@ -151,6 +151,28 @@ getstatic java/lang/System/out Ljava/io/PrintStream;
 iload 26
 invokevirtual java/io/PrintStream/println(I)V
 
+ldc 2
+istore 1
+
+iload 1
+ldc 1
+if_icmpne L32
+ldc "One"
+goto L31
+iload 1
+ldc 2
+if_icmpne L32
+ldc "Two"
+goto L31
+L32:
+ldc "Other"
+L31:
+istore 1
+
+getstatic java/lang/System/out Ljava/io/PrintStream;
+iload 1
+invokevirtual java/io/PrintStream/println(I)V
+
 return
 
 .end method

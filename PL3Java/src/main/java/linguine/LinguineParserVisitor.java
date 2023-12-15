@@ -106,12 +106,6 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMatch(LinguineParser.MatchContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link LinguineParser#cases}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCases(LinguineParser.CasesContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link LinguineParser#case}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
