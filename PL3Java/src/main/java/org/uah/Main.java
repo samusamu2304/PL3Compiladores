@@ -62,9 +62,13 @@ public class Main {
 
         // System.out.println("\n\n");
         // new ListingTreePrinter().print(rootNode);
+
+        addStringFunctions(tablaSimbolos);
+
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
         String jasminFile = createJasminFile(jasmineCode);
+
         jasminFile += tablaSimbolos.getFunciones();
         System.out.println(jasminFile);
         try {
@@ -92,5 +96,26 @@ public class Main {
                 + "return\n"
                 + "\n"
                 + ".end method\n";
+    }
+
+    private static void addStringFunctions(TablaSimbolos ts){
+        String concatFunc = "\n"
+            + ".method public static concat(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n"
+            + ".limit stack 100\n"
+            + ".limit locals 100\n"
+            + "aload_0\n"
+            + "aload_1\n"
+            + "new java/lang/StringBuilder\n"
+            + "dup\n"
+            + "invokespecial java/lang/StringBuilder/<init>()V\n"
+            + "aload_0\n"
+            + "invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;\n"
+            + "aload_1\n"
+            + "invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;\n"
+            + "invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;\n"
+            + "areturn\n"
+            + ".end method\n";
+        String args = "Ljava/lang/String;Ljava/lang/String;";
+        ts.addFuncion("concat", 0, null, args, concatFunc);
     }
 }

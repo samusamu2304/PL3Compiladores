@@ -5,43 +5,30 @@
    .limit stack 100
    .limit locals 100
 
-ldc 0
-istore 2
+ldc "Hola"
+astore 1
+
+ldc " mundo"
+astore 2
 
 
-ldc 3
-invokestatic Linguine/factorial(I)I
-istore 2
-
-getstatic java/lang/System/out Ljava/io/PrintStream;
-iload 2
-invokevirtual java/io/PrintStream/println(I)V
 
 return
 
 .end method
-.method public static factorial(I)I
+
+.method public static concat(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
 .limit stack 100
 .limit locals 100
-iload 0
-ldc 0
-if_icmpeq L4
-ldc 0
-goto L5
-L4:
-ldc 1
-L5:
-ldc 1
-if_icmpne L2
-ldc 1
-goto L1
-L2:
-iload 0
-iload 0
-ldc 1
-isub
-invokestatic Linguine/factorial(I)I
-imul
-L1:
-ireturn
+aload_0
+aload_1
+new java/lang/StringBuilder
+dup
+invokespecial java/lang/StringBuilder/<init>()V
+aload_0
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+aload_1
+invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;
+areturn
 .end method

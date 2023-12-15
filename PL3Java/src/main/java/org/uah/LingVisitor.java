@@ -469,6 +469,9 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     @Override
     public String visitLlamadaFuncion(LinguineParser.LlamadaFuncionContext ctx) {
         String codJasmin = "";
+
+        System.out.println("LLAMADA FUNCION: " + ctx.ID().getText());
+
         String sParam = tablaSimbolos.getSimbolo(ctx.ID().getText()).getValor().toString();
         codJasmin += visit(ctx.args());
         codJasmin += "invokestatic Linguine/"+ ctx.ID().getText()+"("+sParam+")I\n";
@@ -503,22 +506,26 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(0));
         codJasmin += visit(ctx.getChild(2));
-        if (obtenerTipo(ctx.expresion(0)).equals("STRING") && obtenerTipo(ctx.expresion(1)).equals("STRING") && ctx.getChild(1).getText().equals("+")){
+
+        String tipo1 = obtenerTipo(ctx.expresion(0));
+        String tipo2 = obtenerTipo(ctx.expresion(1));
+
+        if (tipo1.equals("STRING") && tipo2.equals("STRING") && ctx.getChild(1).getText().equals("+")){
             codJasmin += "invokevirtual java/lang/String/concat(Ljava/lang/String;)Ljava/lang/String;\n";
-        }else if (obtenerTipo(ctx.expresion(0)).equals("INT") && obtenerTipo(ctx.expresion(1)).equals("INT")){
+        }else if (tipo1.equals("INT") && tipo2.equals("INT")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "iadd\n";
             } else {
                 codJasmin += "isub\n";
             }
-        } else if (obtenerTipo(ctx.expresion(0)).equals("FLOAT") && obtenerTipo(ctx.expresion(1)).equals("FLOAT")){
+        } else if (tipo1.equals("FLOAT") && tipo2.equals("FLOAT")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "fadd\n";
             } else {
                 codJasmin += "fsub\n";
             }
-        }else if (obtenerTipo(ctx.expresion(0)).equals("ID") && obtenerTipo(ctx.expresion(1)).equals("INT")
-        || obtenerTipo(ctx.expresion(0)).equals("INT") && obtenerTipo(ctx.expresion(1)).equals("ID")){
+        }else if (tipo1.equals("ID") && tipo2.equals("INT")
+        || tipo1.equals("INT") && tipo2.equals("ID")){
             if (ctx.getChild(1).getText().equals("+")) {
                 codJasmin += "iadd\n";
             } else {
@@ -526,7 +533,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             }
         }
         else{
-            System.out.println("Error: no se pueden sumar o restar tipos distintos.");
+            System.out.println("Error: no se pueden sumar o restar tipos distintos (" + tipo1 + " y " + tipo2 + ").");
         }
         return codJasmin;
     }
