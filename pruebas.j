@@ -1,11 +1,8 @@
+.class public Pruebas
+.super java/lang/Object
 
-
-
-
-let x = 0;
-let y = 1;
-
-fun add(arg1, arg2) -> arg1 + arg2;
-
-let z = add(x, y);
-show(z);
++ ".method public static getlen(Ljava/lang/String;)I\n"
++ "aload_0\n"
++ "invokevirtual java/lang/String.length()I\n"
++ "ireturn\n"
++ ".end method\n"

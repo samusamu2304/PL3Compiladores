@@ -5,30 +5,33 @@
    .limit stack 100
    .limit locals 100
 
-ldc "Hola"
-astore 1
-
-ldc " mundo"
-astore 2
-
-
+   ldc "hola"
+   invokestatic Linguine/replaceChar(Ljava/lang/String;II)Ljava/lang/String;
 
 return
 
 .end method
 
-.method public static concat(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
-.limit stack 100
-.limit locals 100
+.method public static replaceChar(Ljava/lang/String;II)Ljava/lang/String;
+.limit locals 4
+.limit stack 4
+
+aload_0         ; Load reference to the string
+iload_1         ; Load the index
+iload_2         ; Load the character
+
+invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
+
+invokevirtual java/lang/String.substring(I)Ljava/lang/String;
+invokevirtual java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;
+
 aload_0
-aload_1
-new java/lang/StringBuilder
-dup
-invokespecial java/lang/StringBuilder/<init>()V
-aload_0
-invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-aload_1
-invokevirtual java/lang/StringBuilder/append(Ljava/lang/String;)Ljava/lang/StringBuilder;
-invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;
+iload_1
+iconst_1
+iadd
+invokevirtual java/lang/String.substring(I)Ljava/lang/String;
+
+invokevirtual java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;
+
 areturn
 .end method

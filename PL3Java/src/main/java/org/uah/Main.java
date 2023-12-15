@@ -99,6 +99,18 @@ public class Main {
     }
 
     private static void addStringFunctions(TablaSimbolos ts){
+        String args = "Ljava/lang/String;Ljava/lang/String;";
+
+        String copyFunc = "\n"
+        + ".method public static copy(Ljava/lang/String;)Ljava/lang/String;\n"
+                + ".limit stack 100\n"
+                + ".limit locals 100\n"
+                + "aload 0\n"
+                + "invokespecial java/lang/String/<init>(Ljava/lang/String;)V\n"
+                + "areturn\n"
+                + ".end method\n";
+        ts.addFuncion("copy", 0, null, args, copyFunc);
+
         String concatFunc = "\n"
             + ".method public static concat(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n"
             + ".limit stack 100\n"
@@ -115,7 +127,57 @@ public class Main {
             + "invokevirtual java/lang/StringBuilder/toString()Ljava/lang/String;\n"
             + "areturn\n"
             + ".end method\n";
-        String args = "Ljava/lang/String;Ljava/lang/String;";
         ts.addFuncion("concat", 0, null, args, concatFunc);
+
+        String substractFunc = "\n"
+            + ".method public static substract(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;\n"
+            + ".limit stack 100\n"
+            + ".limit locals 100\n"
+            + "aload_0\n"
+            + "aload_1\n"
+            + "ldc \"\"\n"
+            + "invokevirtual java/lang/String/replace(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;\n"
+            + "areturn\n"
+            + ".end method\n";
+        ts.addFuncion("substract", 0, null, args, substractFunc);
+
+        String getcharFunc = "\n"
+            + ".method public static getchar(Ljava/lang/String;I)C\n"
+            + ".limit locals 100\n"
+            + ".limit stack 100\n"
+            + "aload_0\n"
+            + "iload_1\n"
+            + "invokevirtual java/lang/String.charAt(I)C\n"
+            + "ireturn\n"
+            + ".end method\n";
+        ts.addFuncion("getchar", 0, null, args, getcharFunc);
+
+        String setcharFunc = "\n"
+            + ".method public static setchar(Ljava/lang/String;II)Ljava/lang/String;\n"
+            + ".limit locals 4\n"
+            + ".limit stack 4\n"
+            + "aload_0\n"
+            + "iload_1\n"
+            + "iload_2\n"
+            + "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n"
+            + "invokevirtual java/lang/String.substring(I)Ljava/lang/String;\n"
+            + "invokevirtual java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;\n"
+            + "aload_0\n"
+            + "iload_1\n"
+            + "iconst_1\n"
+            + "iadd\n"
+            + "invokevirtual java/lang/String.substring(I)Ljava/lang/String;\n"
+            + "invokevirtual java/lang/String.concat(Ljava/lang/String;)Ljava/lang/String;\n"
+            + "areturn\n"
+            + ".end method\n";
+        ts.addFuncion("setchar", 0, null, args, setcharFunc);
+
+        String getlenFunc = "\n"
+            + ".method public static getlen(Ljava/lang/String;)I\n"
+            + "aload_0\n"
+            + "invokevirtual java/lang/String.length()I\n"
+            + "ireturn\n"
+            + ".end method\n";
+        ts.addFuncion("getlen", 0, null, args, getlenFunc);
     }
 }
