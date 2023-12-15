@@ -1,4 +1,7 @@
-let x = 0;
-fun factorial(n) -> if (n == 0) then 1 else n * factorial(n - 1);
-x = factorial(3);
-show(x);
+for (let x = 0; x<10; x++) {
+     show(x);
+     show("hola");
+     for (let y = 0; y<10; y++) {
+        show(y);
+    };
+};
