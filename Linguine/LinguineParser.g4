@@ -28,33 +28,34 @@ asignacion: ID ASSIGN expresion # AsigSimple
         |ID MINUSMINUS  # Dec
         ;
 
-for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN sentencia;
+for: FOR LPAREN declaracion SEMICOLON expresion SEMICOLON asignacion RPAREN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY;
 
-while: WHILE LPAREN expresion RPAREN sentencia;
+while: WHILE LPAREN expresion RPAREN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY;
 
-condicional: IF LPAREN expresion RPAREN THEN sentencia (ELSE sentencia)?;
+condicional: (IF LPAREN expresion RPAREN THEN
+ LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY
+ (ELSEIF LPAREN expresion RPAREN THEN LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY)*
+ (ELSE LCURLY NLINE* ((sentencia SEMICOLON  NLINE*)*sentencia SEMICOLON) NLINE* RCURLY)?)
+ | (IF LPAREN expresion RPAREN THEN sentencia (ELSE sentencia)?);
 
 funcion: FUN ID LPAREN params RPAREN ARROW (sentencia);
 
 params: ID (COMMA ID)*;
 
-show: SHOW expresion;
+show: SHOW LPAREN expresion RPAREN;
 
-match: MATCH expresion WITH cases;
-
-cases: (NLINE case)+;
-
-case: PIPE (expresion | QEST) ARROW expresion;
+match: MATCH expresion WITH case+ (NLINE PIPE QEST ARROW expresion)?;
+case: NLINE PIPE expresion ARROW expresion;
 
 expresion:  expresion (MUL | DIV) expresion # MulDiv
         | expresion (PLUS | MINUS) expresion    # AddSub
         | expresion (GT | GTE | EQ | LT | LTE) expresion    # Rel
         | expresion (AND | OR) expresion    # AndOr
         | LPAREN expresion RPAREN   # Parentesis
+        | BOOLEAN  # Boolean
         | ID    # Id
         | INT   # Int
         | FLOAT # Float
-        | BOOLEAN  # Bool
         | STRING    # String
         | ID LPAREN args RPAREN   # LlamadaFuncion
         ;

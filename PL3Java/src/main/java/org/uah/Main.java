@@ -57,15 +57,15 @@ public class Main {
         // System.out.println("\n\n");
         // System.out.println("Tabla de variables");
         // walker.walk(listener, tree);
-        GeneradorDeArboles generadorDeArboles = new GeneradorDeArboles(tree,parser);
-        SimpleTreeNode rootNode = generadorDeArboles.generarArbol();
+        //GeneradorDeArboles generadorDeArboles = new GeneradorDeArboles(tree,parser);
+        //SimpleTreeNode rootNode = generadorDeArboles.generarArbol();
 
         // System.out.println("\n\n");
         // new ListingTreePrinter().print(rootNode);
-
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
         String jasminFile = createJasminFile(jasmineCode);
+        jasminFile += tablaSimbolos.getFunciones();
         System.out.println(jasminFile);
         try {
             FileWriter myWriter = new FileWriter("codigo.j");
@@ -91,6 +91,6 @@ public class Main {
                 + instructions + "\n"
                 + "return\n"
                 + "\n"
-                + ".end method";
+                + ".end method\n";
     }
 }

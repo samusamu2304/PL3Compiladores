@@ -197,18 +197,6 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCases(LinguineParser.CasesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCases(LinguineParser.CasesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCase(LinguineParser.CaseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -228,18 +216,6 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFloat(LinguineParser.FloatContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBool(LinguineParser.BoolContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBool(LinguineParser.BoolContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -324,6 +300,18 @@ public class LinguineParserBaseListener implements LinguineParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitString(LinguineParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBoolean(LinguineParser.BooleanContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoolean(LinguineParser.BooleanContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

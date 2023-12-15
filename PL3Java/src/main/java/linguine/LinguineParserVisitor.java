@@ -106,12 +106,6 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMatch(LinguineParser.MatchContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link LinguineParser#cases}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCases(LinguineParser.CasesContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link LinguineParser#case}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -124,13 +118,6 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFloat(LinguineParser.FloatContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Bool}
-	 * labeled alternative in {@link LinguineParser#expresion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBool(LinguineParser.BoolContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code LlamadaFuncion}
 	 * labeled alternative in {@link LinguineParser#expresion}.
@@ -180,6 +167,13 @@ public interface LinguineParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitString(LinguineParser.StringContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Boolean}
+	 * labeled alternative in {@link LinguineParser#expresion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBoolean(LinguineParser.BooleanContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code AndOr}
 	 * labeled alternative in {@link LinguineParser#expresion}.
