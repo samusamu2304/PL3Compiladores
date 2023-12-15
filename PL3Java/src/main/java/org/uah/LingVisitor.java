@@ -177,6 +177,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     @Override
     public String visitFor(LinguineParser.ForContext ctx) {
+        tablaSimbolos.pushTabla();
         String repLabel = "L" + getContadorEtiqueta();
         String endLabel = "L" + getContadorEtiqueta();
         String codJasmin = "";
@@ -193,11 +194,13 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         codJasmin += visit(ctx.asignacion());
         codJasmin += "goto " + repLabel + "\n";
         codJasmin += endLabel + ":\n";
+        tablaSimbolos.popTabla();
         return codJasmin;
     }
 
     @Override
     public String visitWhile(LinguineParser.WhileContext ctx) {
+        tablaSimbolos.pushTabla();
         String codJasmin = "";
         String repLabel = "L" + getContadorEtiqueta();
         String endLabel = "L" + getContadorEtiqueta();
@@ -212,11 +215,13 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         }
         codJasmin += "goto " + repLabel + "\n";
         codJasmin += endLabel + ":\n";
+        tablaSimbolos.popTabla();
         return codJasmin;
     }
 
     @Override
     public String visitCondicional(LinguineParser.CondicionalContext ctx) {
+        tablaSimbolos.pushTabla();
         String codJasmin = "";
         codJasmin += visit(ctx.getChild(2));
         String etiqElse = "L" + getContadorEtiqueta();
@@ -232,12 +237,13 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         codJasmin += etiqElse + ":\n";
         codJasmin += codRamaElse;
         codJasmin += etiqThen + ":\n";
+        tablaSimbolos.popTabla();
         return codJasmin;
     }
 
     @Override
     public String visitFuncion(LinguineParser.FuncionContext ctx) {
-        //TODO: Completar esta cagada despues de implementar scopes
+        //TODO: Completar esta cagada
         String codJasmin = "";
         codJasmin += ".method public static "+ctx.ID().getText()+"(";
         codJasmin += toRomans(ctx.params().getChildCount()) + ")I\n";

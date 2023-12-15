@@ -39,53 +39,56 @@ L8:
 goto L3
 L4:
 
+ldc "hola"
+astore 9
+
 ldc 0
-istore 11
-L9:
-iload 11
+istore 12
+L10:
+iload 12
 ldc 10
-if_icmplt L12
+if_icmplt L13
 ldc 0
-goto L13
-L12:
-ldc 1
+goto L14
 L13:
 ldc 1
-if_icmpne L10
+L14:
+ldc 1
+if_icmpne L11
 getstatic java/lang/System/out Ljava/io/PrintStream;
-iload 11
+iload 12
 invokevirtual java/io/PrintStream/println(I)V
 getstatic java/lang/System/out Ljava/io/PrintStream;
-ldc "hola"
+aload 9
 invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 ldc 0
-istore 16
-L14:
-iload 16
-ldc 10
-if_icmplt L17
+istore 17
+L15:
+iload 17
+ldc 5
+if_icmplt L18
 ldc 0
-goto L18
-L17:
-ldc 1
+goto L19
 L18:
 ldc 1
-if_icmpne L15
+L19:
+ldc 1
+if_icmpne L16
 getstatic java/lang/System/out Ljava/io/PrintStream;
-iload 16
+iload 17
 invokevirtual java/io/PrintStream/println(I)V
-iload 16
+iload 17
 ldc 1
 iadd
-istore 16
-goto L14
-L15:
-iload 11
+istore 17
+goto L15
+L16:
+iload 12
 ldc 1
 iadd
-istore 11
-goto L9
-L10:
+istore 12
+goto L10
+L11:
 
 return
 

@@ -1,12 +1,16 @@
 package org.uah;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TablaSimbolos {
     private Map<String, Simbolo> tablaSimbolos;
+    private ArrayList<Map<String, Simbolo>> stackTablasSimbolos;
     public TablaSimbolos(){
         tablaSimbolos = new HashMap<>();
+        stackTablasSimbolos = new ArrayList<>();
     }
 
     public void addVariable(String nombre,String tipo, int iVar, String clase, Object valor, String codigo){
@@ -17,15 +21,41 @@ public class TablaSimbolos {
     }
 
     public void updateVariable(String nombre,String tipo, int iVar, Object valor, String codigo){
-        tablaSimbolos.get(nombre).updateVariable(tipo,iVar,valor,codigo);
+        getSimbolo(nombre).updateVariable(tipo,iVar,valor,codigo);
     }
 
     public Simbolo getSimbolo(String nombre){
-        return tablaSimbolos.get(nombre);
+        Simbolo simbolo = null;
+        if (tablaSimbolos.containsKey(nombre)){
+            simbolo = tablaSimbolos.get(nombre);
+        } else if (!stackTablasSimbolos.isEmpty()){
+            for (int i = stackTablasSimbolos.size()-1; i >= 0; i--) {
+                Map<String, Simbolo> tabla = stackTablasSimbolos.get(i);
+                if (tabla.containsKey(nombre)){
+                    simbolo = tabla.get(nombre);
+                    break;
+                }
+            }
+        }
+        return simbolo;
     }
 
     public boolean existeSimbolo(String nombre){
-        return tablaSimbolos.containsKey(nombre);
+        //Comprueba si existe en la tabla actual o en las anteriores
+        boolean existe = false;
+        if (tablaSimbolos.containsKey(nombre)){
+            existe = true;
+        } else if (!stackTablasSimbolos.isEmpty()){
+            for (int i = stackTablasSimbolos.size()-1; i >= 0; i--) {
+                Map<String, Simbolo> tabla = stackTablasSimbolos.get(i);
+                if (tabla.containsKey(nombre)){
+                    existe = true;
+                    break;
+                }
+            }
+
+        }
+        return existe;
     }
     public void printTabla(){
         for (Map.Entry<String, Simbolo> entry : tablaSimbolos.entrySet()) {
@@ -38,5 +68,13 @@ public class TablaSimbolos {
             tablaSimbolos.addVariable(entry.getKey(),entry.getValue().clone());
         }
         return tablaSimbolos;
+    }
+    public void pushTabla(){
+        stackTablasSimbolos.add(tablaSimbolos);
+        tablaSimbolos = new HashMap<>();
+    }
+    public void popTabla(){
+        tablaSimbolos = stackTablasSimbolos.get(stackTablasSimbolos.size()-1);
+        stackTablasSimbolos.remove(stackTablasSimbolos.size()-1);
     }
 }
