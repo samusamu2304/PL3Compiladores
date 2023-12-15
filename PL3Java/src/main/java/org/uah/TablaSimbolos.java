@@ -23,6 +23,9 @@ public class TablaSimbolos {
     public void updateVariable(String nombre,String tipo, int iVar, Object valor, String codigo){
         getSimbolo(nombre).updateVariable(tipo,iVar,valor,codigo);
     }
+    public void addFuncion(String nombre, int iVar, ArrayList<String> parametros, Object valor, String codigo){
+        tablaSimbolos.put(nombre, new Simbolo("FUNCION",iVar,"funcion",parametros,valor,codigo));
+    }
 
     public Simbolo getSimbolo(String nombre){
         Simbolo simbolo = null;
@@ -76,5 +79,14 @@ public class TablaSimbolos {
     public void popTabla(){
         tablaSimbolos = stackTablasSimbolos.get(stackTablasSimbolos.size()-1);
         stackTablasSimbolos.remove(stackTablasSimbolos.size()-1);
+    }
+    public String getFunciones(){
+        String funciones = "";
+        for (Map.Entry<String, Simbolo> entry : tablaSimbolos.entrySet()) {
+            if (entry.getValue().getClase().equals("funcion")){
+                funciones += entry.getValue().getCodigo();
+            }
+        }
+        return funciones;
     }
 }

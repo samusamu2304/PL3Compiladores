@@ -6,14 +6,17 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LingVisitor extends LinguineParserBaseVisitor<String> {
     TablaSimbolos tablaSimbolos;
+    int contadorEtiqueta;//0 reservado
     LinguineParser parser;
     public LingVisitor(TablaSimbolos tablaSimbolos, LinguineParser parser) {
         this.tablaSimbolos = tablaSimbolos;
         this.parser = parser;
+        this.contadorEtiqueta = 1;//0 reservado
     }
     @Override
     public String visitAsigSimple(LinguineParser.AsigSimpleContext ctx) {
@@ -105,7 +108,6 @@ public class LingVisitor extends LinguineParserBaseVisitor<String> {
         String codJasmin = "";
         String codigo = "desconocido";
         String regla = parser.getRuleNames()[(((ParserRuleContext) ctx.getChild(3)).getRuleIndex())];
-        System.out.println(regla);
         switch (regla) {
             case "expresion":
                 if (ctx.getChild(3).getChildCount() == 1) {
@@ -337,15 +339,32 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     @Override
     public String visitFuncion(LinguineParser.FuncionContext ctx) {
         //TODO: Completar esta cagada
-        String codJasmin = "";
-        codJasmin += ".method public static "+ctx.ID().getText()+"(";
-        codJasmin += ".limit stack 100\n";
-        codJasmin += ".limit locals 100\n";
-        FuncVisitor funcVisitor = new FuncVisitor(tablaSimbolos, parser);
-        codJasmin += funcVisitor.visit(ctx.sentencia());
-        codJasmin += "ireturn\n";
-        codJasmin += ".end method\n";
-        return codJasmin;
+        if (ctx.getParent().getParent() instanceof LinguineParser.ProgramContext) {
+            FuncVisitor funcVisitor = new FuncVisitor(new TablaSimbolos(), parser);
+            funcVisitor.addParametros(ctx.params().ID());
+            //solo permite declarar funciones en el programa principal
+            if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
+                System.out.println("Error: la funcion " + ctx.ID().getText() + " ya fue declarada.");
+                return "";
+            }
+            int numParams = ctx.params().ID().size();
+            String sParam = "";
+            ArrayList<String> params = new ArrayList<>();
+            for (int i = 0; i < numParams; i++) {
+                sParam += "I";
+                params.add("INT");//posible extension para que acepte mas tipos
+            }
+            String codFuncion = "";
+            codFuncion += ".method public static " + ctx.ID().getText() + "(" + sParam + ")I\n";
+            codFuncion += ".limit stack 100\n";
+            codFuncion += ".limit locals 100\n";
+            funcVisitor.tablaSimbolos.addFuncion(ctx.ID().getText(),  0,  params, sParam, "desconocido");
+            codFuncion += funcVisitor.visit(ctx.sentencia());
+            codFuncion += "ireturn\n";
+            codFuncion += ".end method\n";
+            tablaSimbolos.addFuncion(ctx.ID().getText(),  0,  params, sParam, codFuncion);
+        }
+        return "";
     }
 
     @Override
@@ -450,7 +469,18 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
     @Override
     public String visitLlamadaFuncion(LinguineParser.LlamadaFuncionContext ctx) {
         String codJasmin = "";
-        codJasmin += "invokestatic "+ ctx.ID().getText()+"(";
+        String sParam = tablaSimbolos.getSimbolo(ctx.ID().getText()).getValor().toString();
+        codJasmin += visit(ctx.args());
+        codJasmin += "invokestatic Linguine/"+ ctx.ID().getText()+"("+sParam+")I\n";
+        return codJasmin;
+    }
+
+    @Override
+    public String visitArgs(LinguineParser.ArgsContext ctx) {
+        String codJasmin = "";
+        for (int i = 0; i < ctx.expresion().size(); i++) {
+            codJasmin += visit(ctx.expresion(i));
+        }
         return codJasmin;
     }
 
@@ -487,7 +517,15 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
             } else {
                 codJasmin += "fsub\n";
             }
-        }else{
+        }else if (obtenerTipo(ctx.expresion(0)).equals("ID") && obtenerTipo(ctx.expresion(1)).equals("INT")
+        || obtenerTipo(ctx.expresion(0)).equals("INT") && obtenerTipo(ctx.expresion(1)).equals("ID")){
+            if (ctx.getChild(1).getText().equals("+")) {
+                codJasmin += "iadd\n";
+            } else {
+                codJasmin += "isub\n";
+            }
+        }
+        else{
             System.out.println("Error: no se pueden sumar o restar tipos distintos.");
         }
         return codJasmin;
@@ -580,21 +618,17 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     @Override
     public String visitAndOr(LinguineParser.AndOrContext ctx) {
+        //TODO: Añadir operacion
         return super.visitAndOr(ctx);
     }
 
     @Override
     public String visitInt(LinguineParser.IntContext ctx) {
+        int etiqueta = getContadorEtiqueta();
         return "ldc "+ctx.getText()+"\n";
     }
 
-    @Override
-    public String visitArgs(LinguineParser.ArgsContext ctx) {
-        return super.visitArgs(ctx);
-    }
-
-    private int contadorEtiqueta = 1;//0 reservado
-    private int getContadorEtiqueta(){
+    int getContadorEtiqueta(){
         //Genera etiquetas unicas
         return contadorEtiqueta++;
     }

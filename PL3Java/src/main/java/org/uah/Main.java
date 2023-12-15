@@ -65,6 +65,7 @@ public class Main {
         LingVisitor visitor = new LingVisitor(tablaSimbolos, parser);
         String jasmineCode = visitor.visit(tree);
         String jasminFile = createJasminFile(jasmineCode);
+        jasminFile += tablaSimbolos.getFunciones();
         System.out.println(jasminFile);
         try {
             FileWriter myWriter = new FileWriter("codigo.j");
@@ -90,6 +91,6 @@ public class Main {
                 + instructions + "\n"
                 + "return\n"
                 + "\n"
-                + ".end method";
+                + ".end method\n";
     }
 }
