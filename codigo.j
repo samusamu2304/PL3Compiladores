@@ -163,10 +163,10 @@ goto L31
 L34:
 iload 1
 ldc 2
-if_icmpne L0
+if_icmpne L35
 ldc "Two"
 goto L31
-L0:
+L35:
 ldc "Other"
 L31:
 istore 1

@@ -409,7 +409,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
         int etiquetaSalto = getContadorEtiqueta();
             int[] etiquetasCase = new int[caseNodes.size()+1];
             int etiquetaQuest = getContadorEtiqueta();
-            for (int i = 0; i < caseNodes.size(); i++) {
+            for (int i = 0; i < caseNodes.size()+1; i++) {
                 etiquetasCase[i] = getContadorEtiqueta();
             }
             for (int i = 0; i < caseNodes.size(); i++) {//itera sobre los case
@@ -595,7 +595,7 @@ if (tablaSimbolos.existeSimbolo(ctx.ID().getText())) {
 
     private int contadorEtiqueta = 1;//0 reservado
     private int getContadorEtiqueta(){
-        //Genera etiquetas unicas para cada condicional
+        //Genera etiquetas unicas
         return contadorEtiqueta++;
     }
 
